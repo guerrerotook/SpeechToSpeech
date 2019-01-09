@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Cse.SpeechToSpeech.UI.Speech;
+using Microsoft.Cse.SpeechToSpeech.UI.Storage;
+using Microsoft.Cse.SpeechToSpeech.UI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +23,55 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Loaded += OnMainWindowsLoaded;
+        }
+
+        private void OnMainWindowsLoaded(object sender, RoutedEventArgs e)
+        {
+            viewModel = new MainWindowViewModel();
+            DataContext = viewModel;
+        }
+
+        private void OnInputButtonClick(object sender, RoutedEventArgs e)
+        {
+            EnableButtons();
+        }
+
+        private void EnableButtons()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                startButton.IsEnabled = true;
+                radioGroup.IsEnabled = true;
+                optionPanel.IsEnabled = true;
+            });
+        }
+
+        private void OnSelectFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            using (System.Windows.Forms.FileDialog fileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    fileNameTextBox.Text = fileDialog.FileName;
+                }
+            }
+        }
+
+        private void OnSaveKeysClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnStartClick(object sender, RoutedEventArgs e)
+        {
+            var task = viewModel.StartRecognizer();
         }
     }
 }

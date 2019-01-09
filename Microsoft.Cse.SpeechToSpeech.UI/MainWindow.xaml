@@ -1,12 +1,151 @@
-﻿<Window x:Class="Microsoft.Cse.SpeechToSpeech.UI.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI"
+        xmlns:Converter="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI.Converter" x:Class="Microsoft.Cse.SpeechToSpeech.UI.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Window.Resources>
+        <Converter:ComboBoxValueConverter x:Key="ComboBoxValueConverter"/>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Label HorizontalAlignment="Left" Width="326" Content="Cognitive Services Speech To Text Sample"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="200"/>
+                <ColumnDefinition Width="*" MinWidth="200"/>
+                <ColumnDefinition x:Name="column2" Width="auto" MinWidth="100"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Background="Beige"  Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="200"/>
+                    <RowDefinition Height="auto" MaxHeight="330"/>
+                </Grid.RowDefinitions>
+                <TextBox TextWrapping="Wrap" Text="{Binding PartialOutput}" Margin="5,30,10,10" VerticalScrollBarVisibility="Visible"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Recognizing output" VerticalAlignment="Top" Margin="5,10,0,0"/>
+            </Grid>
+
+            <Grid Grid.Column="1"  Background="Beige" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="200"/>
+                    <RowDefinition Height="auto" MaxHeight="330"/>
+                </Grid.RowDefinitions>
+                <TextBox TextWrapping="Wrap" Text="{Binding DebugOutput}" Margin="5,30,10,10" VerticalScrollBarVisibility="Visible"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Debug output" VerticalAlignment="Top" Margin="5,10,0,0"/>
+            </Grid>
+
+            <Grid Grid.Column="2" >
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <Expander ExpandDirection="Left" IsExpanded="True">
+
+                        <Expander.Header>
+                            <TextBlock Text="Settings">
+                                <TextBlock.LayoutTransform>
+                                    <RotateTransform Angle="90"/>
+                                </TextBlock.LayoutTransform>
+                            </TextBlock>
+                        </Expander.Header>
+
+                        <StackPanel x:Name="optionPanel">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Expander  Header="Input Source"  x:Name="radioGroup" Grid.Row="0" Margin="5">
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton x:Name="micRadioButton" IsChecked="{Binding UseMicrophone, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use Microphone"/>
+                                        <RadioButton x:Name="fileInputRadioButton" IsChecked="{Binding UseFileInput, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use wav file"/>
+                                        <StackPanel Orientation="Vertical" Grid.Row="1"  Margin="10">
+                                            <Button  x:Name="selectFileButton" Content="Select File" Margin="0,5,0,5" Click="OnSelectFileButtonClick" Height="35" VerticalAlignment="Top"/>
+                                            <TextBox x:Name="fileNameTextBox" MaxWidth="210" Padding="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="whatstheweatherlike.wav"
+                                                ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"  />
+
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+
+                                <Expander Header="Recognition Type" x:Name="selectRecoType" Grid.Row="2" Margin="5" >
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton x:Name="basicRadioButton" IsChecked="{Binding UseBaseModel, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Baseline Model"/>
+                                        <RadioButton x:Name="customRadioButton" IsChecked="{Binding UseCustomModel, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Custom Model"/>
+                                        <RadioButton x:Name="bothRadioButton" IsChecked="{Binding UseBaseAndCustomModels, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Both"/>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander Header="Region and Language" Grid.Row="3" Margin="5" >
+                                    <StackPanel Orientation="Vertical">
+                                        <ComboBox  x:Name="regionComboBox" Text="Select Region" Margin="10" AllowDrop="True" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" >
+                                            <ComboBoxItem Tag="westus" IsSelected="true" Content="westus"/>
+                                            <ComboBoxItem Tag="westus" Content="westeurope"/>
+                                            <ComboBoxItem Tag="eastasia" Content="eastasia"/>
+                                            <ComboBoxItem Tag="northeurope" Content="northeurope"/>
+                                        </ComboBox>
+
+                                        <ComboBox  x:Name="languageComboBox" Text="Select Language" SelectedValue="{Binding Language}"  Margin="10" AllowDrop="True">
+                                            <ComboBoxItem Tag="en-US" IsSelected="true" Content="English"/>
+                                            <ComboBoxItem Tag="ar-EG" Content="Arabic"/>
+                                            <ComboBoxItem Tag="zh-CN" Content="Chinese (Mandarin)"/>
+                                            <ComboBoxItem Tag="fr-FR" Content="French"/>
+                                            <ComboBoxItem Tag="de-DE" Content="German"/>
+                                            <ComboBoxItem Tag="It-IT" Content="Italian"/>
+                                            <ComboBoxItem Tag="ja-JP" Content="Japanese"/>
+                                            <ComboBoxItem Tag="pt-BR" Content="Portuguese"/>
+                                            <ComboBoxItem Tag="ru-RU" Content="Russian"/>
+                                            <ComboBoxItem Tag="es-ES" Content="Spanish"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander  Header="Change Keys"  Grid.Row="4" Grid.Column="0"  Margin="5">
+                                    <StackPanel Margin="10">
+                                        <TextBlock Text="Subscription Key:" />
+                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding SubscriptionKey}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                        <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=bothRadioButton}" >
+                                            <TextBlock Text="CRIS Model ID:"/>
+                                            <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                        </StackPanel>
+                                        <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=customRadioButton}" >
+                                            <TextBlock Text="CRIS Model ID:"/>
+                                            <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                        </StackPanel>
+                                        <Button Margin="0,5,0,0" Padding="5" Height="35" VerticalAlignment="Top" Click="OnSaveKeysClick" Content="Save Keys"/>
+                                    </StackPanel>
+                                </Expander>
+                                <StackPanel Orientation="Vertical" Grid.Row="5"  Margin="10" >
+                                    <CheckBox x:Name="immediateResultsCheckBox" Margin="0,10" IsChecked="True" Content="Show Immediate Results"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                    </Expander>
+                </ScrollViewer>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="startButton" Grid.Row="0" Content="Start" Click="OnStartClick" Margin="10" Padding="15" VerticalAlignment="Top"/>
+                    <Button x:Name="stopButton" Grid.Row="1" Content="Stop" Click="OnStartClick" Margin="10" Padding="15" VerticalAlignment="Bottom" Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=micRadioButton}"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
