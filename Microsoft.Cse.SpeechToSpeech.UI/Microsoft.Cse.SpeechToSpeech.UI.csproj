@@ -106,6 +106,7 @@
     <Compile Include="Speech\AzureSpeechManager.cs" />
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />
+    <Compile Include="TextToSpeech\Authentication.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

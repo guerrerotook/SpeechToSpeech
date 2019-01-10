@@ -38,6 +38,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private string customModelEndpointId;
         private Language language;
         private Language translationLanguage;
+        private Language textToSpeechLanguage;
         private string partialOutput;
         private string debugOutput;
         private string lastOutput;
@@ -57,6 +58,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
+        public Language TextToSpeechLanguage { get => textToSpeechLanguage; set => Set(nameof(TextToSpeechLanguage), ref textToSpeechLanguage, value); }
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
