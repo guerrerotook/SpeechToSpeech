@@ -2,11 +2,11 @@
 {
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Translation;
+    using Microsoft.Cse.SpeechToSpeech.UI;
     using System;
     using System.Threading.Tasks;
-    using Microsoft.Cse.SpeechToSpeech.UI;
 
-    public class AzureSpeechManager
+    public class AzureSpeechManager : IDisposable
     {
         private SpeechTranslationConfig speechConfiguration;
         private TranslationRecognizer recognized;
@@ -19,7 +19,7 @@
 
         public AzureSpeechManager()
         {
-            
+
         }
 
         public void Initialize(string subscriptionKey, string region)
@@ -32,10 +32,10 @@
             SendMessage($"Created the SpeechConfiguration with {subscriptionKey} | {region}");
         }
 
-        public void SetSpeechLanguage(string language)
+        public void SetSpeechLanguage(string language, string translationLanguage)
         {
             speechConfiguration.SpeechRecognitionLanguage = language;
-            speechConfiguration.AddTargetLanguage("es");
+            speechConfiguration.AddTargetLanguage(translationLanguage);
         }
 
         public async Task CreateTranslationRecognizer()
@@ -44,27 +44,16 @@
             {
                 await recognized.StopContinuousRecognitionAsync();
                 await recognized.StopKeywordRecognitionAsync();
-                recognized.Recognizing -= OnSpeechRecognizing;
-                recognized.SessionStarted -= OnSessionStarted;
-                recognized.SessionStopped -= OnSessionStopped;
-                recognized.Dispose();
-                recognized = null;
-            }
-
-            try
-            {
-                recognized = new TranslationRecognizer(speechConfiguration);
-                recognized.Recognizing += OnSpeechRecognizing;
-                recognized.SessionStarted += OnSessionStarted;
-                recognized.SessionStopped += OnSessionStopped;
-                recognized.Recognized += OnRecognized;
-                recognized.Synthesizing += OnSynthesizing;
-                recognized.Canceled += OnCanceled;
-            }
-            catch (Exception ex)
-            {
 
             }
+
+            recognized = new TranslationRecognizer(speechConfiguration);
+            recognized.Recognizing += OnSpeechRecognizing;
+            recognized.SessionStarted += OnSessionStarted;
+            recognized.SessionStopped += OnSessionStopped;
+            recognized.Recognized += OnRecognized;
+            recognized.Synthesizing += OnSynthesizing;
+            recognized.Canceled += OnCanceled;
         }
 
         private void SendMessage(string value)
@@ -79,11 +68,12 @@
 
         private void OnSynthesizing(object sender, TranslationSynthesisEventArgs e)
         {
-
+            SendMessage(e.Result.ToString());
         }
 
         private void OnRecognized(object sender, TranslationRecognitionEventArgs e)
         {
+            SendMessage(e.ToString());
         }
 
         public Task StartContinuousRecognitionAsync()
@@ -114,6 +104,18 @@
         private void OnSpeechRecognizing(object sender, TranslationRecognitionEventArgs e)
         {
             Recognizing?.Invoke(sender, e);
+        }
+
+        public void Dispose()
+        {
+            if (recognized != null)
+            {
+                recognized.Recognizing -= OnSpeechRecognizing;
+                recognized.SessionStarted -= OnSessionStarted;
+                recognized.SessionStopped -= OnSessionStopped;
+                recognized.Dispose();
+                recognized = null;
+            }
         }
     }
 }

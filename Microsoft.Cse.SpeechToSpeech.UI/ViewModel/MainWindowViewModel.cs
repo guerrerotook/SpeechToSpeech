@@ -20,19 +20,27 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private const string endpointIdFileName = "CustomModelEndpointId.txt";
         private const string subscriptionKeyFileName = "SubscriptionKey.txt";
 
-
+        private string[] regions = { "westus", "westeurope", "eastasia", "northeurope" };
+        private Language[] languages = {
+            new Language() { Name = "English", Code = "en-US" },
+            new Language() { Name = "Arabic", Code = "ar-EG" },
+            new Language() { Name = "Chinese (Mandarin)", Code = "zh-CN" },
+            new Language() { Name = "French", Code = "fr-FR" },
+            new Language() { Name = "German", Code = "de-DE" },
+            new Language() { Name = "Italian", Code = "It-IT" },
+            new Language() { Name = "Japanese", Code = "ja-JA" },
+            new Language() { Name = "Portuguese", Code = "pt-BR" },
+            new Language() { Name = "Russian", Code = "ru-RU" },
+            new Language() { Name = "Spanish", Code = "es-ES" }
+        };
 
         private string subscriptionKey;
         private string customModelEndpointId;
-        private string language;
+        private Language language;
+        private Language translationLanguage;
         private string partialOutput;
         private string debugOutput;
-
-        public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
-        public string CustomModelEndpointId { get => customModelEndpointId; set => Set(nameof(CustomModelEndpointId), ref customModelEndpointId, value); }
-        public string Language { get => language; set => Set(nameof(Language), ref language, value); }
-        public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
-        public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
+        private string lastOutput;
 
         public MainWindowViewModel()
         {
@@ -40,9 +48,34 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             DebugOutput = string.Empty;
             LoadKeys();
             PropertyChanged += OnSpeechModelPropertyChanged;
-            Language = "en-US";
 
         }
+
+        public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
+        public string CustomModelEndpointId { get => customModelEndpointId; set => Set(nameof(CustomModelEndpointId), ref customModelEndpointId, value); }
+        public Language Language { get => language; set => Set(nameof(Language), ref language, value); }
+        public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
+        public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
+        public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
+
+        public IEnumerable<Language> Languages { get => languages; }
+        public IEnumerable<string> Regions { get => regions; }
+
+        public bool IsRecoznizingRunning
+        {
+            get
+            {
+                if (azureSpeech != null)
+                {
+                    return azureSpeech.IsSessionStarted;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
 
         private void LoadKeys()
         {
@@ -85,6 +118,14 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             azureSpeech.Initialize(subcription, region);
         }
 
+        private void DestoyAzureSpeechManager()
+        {
+            azureSpeech.Recognizing -= OnAzureSpeechRecognizing;
+            azureSpeech.Notification -= OnAzureSpeechNotification;
+            azureSpeech.Dispose();
+            azureSpeech = null;
+        }
+
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
         {
             DebugOutput = string.Concat(DebugOutput, Environment.NewLine, e.Message);
@@ -92,7 +133,8 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         private void OnAzureSpeechRecognizing(object sender, TranslationRecognitionEventArgs e)
         {
-            PartialOutput = string.Concat(PartialOutput, Environment.NewLine, e.ToString());
+            LastOutput = e.ToString();
+            PartialOutput = string.Concat(PartialOutput, e.ToString(), Environment.NewLine);
         }
 
         public async Task StartRecognizer()
@@ -107,7 +149,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
             if (azureSpeech != null)
             {
-                azureSpeech.SetSpeechLanguage(Language);
+                azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code);
                 await azureSpeech.CreateTranslationRecognizer();
                 await azureSpeech.StartContinuousRecognitionAsync();
             }
@@ -118,6 +160,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             if (azureSpeech != null)
             {
                 await azureSpeech.StopContinuousRecognitionAsync();
+                DestoyAzureSpeechManager();
             }
         }
     }

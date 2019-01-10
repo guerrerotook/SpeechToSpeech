@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI"
         xmlns:Converter="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI.Converter" x:Class="Microsoft.Cse.SpeechToSpeech.UI.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow">
     <Window.Resources>
         <Converter:ComboBoxValueConverter x:Key="ComboBoxValueConverter"/>
         <BooleanToVisibilityConverter x:Key="b2v" />
@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" >
-            <Label HorizontalAlignment="Left" Width="326" Content="Cognitive Services Speech To Text Sample"/>
+            <Label HorizontalAlignment="Left" Width="326" Content="Speech to Translation to Speech Sample" FontSize="18" FontFamily="Segoe UI Light"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -31,8 +31,9 @@
                     <RowDefinition Height="*" MinHeight="200"/>
                     <RowDefinition Height="auto" MaxHeight="330"/>
                 </Grid.RowDefinitions>
-                <TextBox TextWrapping="Wrap" Text="{Binding PartialOutput}" Margin="5,30,10,10" VerticalScrollBarVisibility="Visible"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding PartialOutput}" Margin="5,120.208,10,10" VerticalScrollBarVisibility="Visible"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Recognizing output" VerticalAlignment="Top" Margin="5,10,0,0"/>
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,30.96,10,0" Height="84.248" Text="{Binding LastOutput}"/>
             </Grid>
 
             <Grid Grid.Column="1"  Background="Beige" Margin="10">
@@ -91,27 +92,42 @@
                                         <RadioButton x:Name="bothRadioButton" IsChecked="{Binding UseBaseAndCustomModels, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Both"/>
                                     </StackPanel>
                                 </Expander>
-                                <Expander Header="Region and Language" Grid.Row="3" Margin="5" >
+                                <Expander Header="Region and Language" Grid.Row="3" Margin="5" IsExpanded="True" >
                                     <StackPanel Orientation="Vertical">
+                                        <TextBlock TextWrapping="Wrap" Text="Azure region" Margin="10,0,0,0"/>
+
+
                                         <ComboBox  x:Name="regionComboBox" Text="Select Region" Margin="10" AllowDrop="True" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" >
                                             <ComboBoxItem Tag="westus" IsSelected="true" Content="westus"/>
                                             <ComboBoxItem Tag="westus" Content="westeurope"/>
                                             <ComboBoxItem Tag="eastasia" Content="eastasia"/>
                                             <ComboBoxItem Tag="northeurope" Content="northeurope"/>
                                         </ComboBox>
+                                        <TextBlock TextWrapping="Wrap" Text="Original language" Margin="10,0,0,0"/>
 
-                                        <ComboBox  x:Name="languageComboBox" Text="Select Language" SelectedValue="{Binding Language}"  Margin="10" AllowDrop="True">
-                                            <ComboBoxItem Tag="en-US" IsSelected="true" Content="English"/>
-                                            <ComboBoxItem Tag="ar-EG" Content="Arabic"/>
-                                            <ComboBoxItem Tag="zh-CN" Content="Chinese (Mandarin)"/>
-                                            <ComboBoxItem Tag="fr-FR" Content="French"/>
-                                            <ComboBoxItem Tag="de-DE" Content="German"/>
-                                            <ComboBoxItem Tag="It-IT" Content="Italian"/>
-                                            <ComboBoxItem Tag="ja-JP" Content="Japanese"/>
-                                            <ComboBoxItem Tag="pt-BR" Content="Portuguese"/>
-                                            <ComboBoxItem Tag="ru-RU" Content="Russian"/>
-                                            <ComboBoxItem Tag="es-ES" Content="Spanish"/>
+                                        <ComboBox x:Name="languageComboBox" Text="Select Language" SelectedItem="{Binding Language, Mode=TwoWay}" Margin="10" ItemsSource="{Binding Languages}"  >
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Name}" />
+                                                        <TextBlock Text="{Binding Code}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
                                         </ComboBox>
+                                        <TextBlock TextWrapping="Wrap" Text="Trasnlated target language" Margin="10,0,0,0"/>
+                                        <ComboBox Margin="10" ItemsSource="{Binding Languages}" SelectedItem="{Binding TranslationLanguage, Mode=TwoWay}"  >
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Name}" />
+                                                        <TextBlock Text="{Binding Code}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+
                                     </StackPanel>
                                 </Expander>
                                 <Expander  Header="Change Keys"  Grid.Row="4" Grid.Column="0"  Margin="5">

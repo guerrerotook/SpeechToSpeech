@@ -69,9 +69,16 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
 
         }
 
-        private void OnStartClick(object sender, RoutedEventArgs e)
+        private async void OnStartClick(object sender, RoutedEventArgs e)
         {
-            var task = viewModel.StartRecognizer();
+            if (viewModel.IsRecoznizingRunning)
+            {
+                await viewModel.StopRecognizer();
+            }
+            else
+            {
+                await viewModel.StartRecognizer();
+            }
         }
     }
 }
