@@ -16,6 +16,7 @@
 
         public event EventHandler<TranslationRecognitionEventArgs> Recognizing;
         public event EventHandler<NotificationEventArgs> Notification;
+        public event EventHandler<TranslationSynthesisEventArgs> TranslationSynthesizing;
 
         public AzureSpeechManager()
         {
@@ -32,10 +33,11 @@
             SendMessage($"Created the SpeechConfiguration with {subscriptionKey} | {region}");
         }
 
-        public void SetSpeechLanguage(string language, string translationLanguage)
+        public void SetSpeechLanguage(string language, string translationLanguage, string voice)
         {
             speechConfiguration.SpeechRecognitionLanguage = language;
             speechConfiguration.AddTargetLanguage(translationLanguage);
+            speechConfiguration.VoiceName = voice;
         }
 
         public async Task CreateTranslationRecognizer()
@@ -68,7 +70,7 @@
 
         private void OnSynthesizing(object sender, TranslationSynthesisEventArgs e)
         {
-            SendMessage(e.Result.ToString());
+            TranslationSynthesizing?.Invoke(sender, e);
         }
 
         private void OnRecognized(object sender, TranslationRecognitionEventArgs e)

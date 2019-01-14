@@ -6,6 +6,7 @@ using Microsoft.Cse.SpeechToSpeech.UI.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,16 +23,90 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         private string[] regions = { "westus", "westeurope", "eastasia", "northeurope" };
         private Language[] languages = {
-            new Language() { Name = "English", Code = "en-US" },
-            new Language() { Name = "Arabic", Code = "ar-EG" },
-            new Language() { Name = "Chinese (Mandarin)", Code = "zh-CN" },
-            new Language() { Name = "French", Code = "fr-FR" },
-            new Language() { Name = "German", Code = "de-DE" },
-            new Language() { Name = "Italian", Code = "It-IT" },
-            new Language() { Name = "Japanese", Code = "ja-JA" },
-            new Language() { Name = "Portuguese", Code = "pt-BR" },
-            new Language() { Name = "Russian", Code = "ru-RU" },
-            new Language() { Name = "Spanish", Code = "es-ES" }
+            new Language() { Name = "Arabic (Egypt), modern standard", Code = "ar-EG" },
+            new Language() { Name = "Catalan (Spain)", Code = "ca-ES" },
+            new Language() { Name = "Danish (Denmark)", Code = "da-DK" },
+            new Language() { Name = "German (Germany)", Code = "de-DE" },
+            new Language() { Name = "English (Australia)", Code = "en-AU" },
+            new Language() { Name = "English (Canada)", Code = "en-CA" },
+            new Language() { Name = "English (United Kingdom)", Code = "en-GB" },
+            new Language() { Name = "English (India)", Code = "en-IN" },
+            new Language() { Name = "English (New Zealand)", Code = "en-NZ" },
+            new Language() { Name = "English (United States)", Code = "en-US" },
+            new Language() { Name = "Spanish (Spain)", Code = "es-ES" },
+            new Language() { Name = "Spanish (Mexico)", Code = "ed-MX" },
+            new Language() { Name = "Finnish (Finland)", Code = "fi-FI" },
+            new Language() { Name = "French (Canada)", Code = "fr-CA" },
+            new Language() { Name = "French (France)", Code = "fr-FR" },
+            new Language() { Name = "Hindi (India)", Code = "hi-IN" },
+            new Language() { Name = "Italian (Italy)", Code = "it-IT" },
+            new Language() { Name = "Japanese (Japan)", Code = "ja-JP" },
+            new Language() { Name = "Korean (Korea)", Code = "ko-KR" },
+            new Language() { Name = "Norwegian (Bokmål) (Norway)", Code = "en-NZ" },
+            new Language() { Name = "Dutch (Netherlands)", Code = "nl-NL" },
+            new Language() { Name = "Polish (Poland)", Code = "pl-PL" },
+            new Language() { Name = "Portuguese (Brazil)", Code = "pt-BR" },
+            new Language() { Name = "Portuguese (Portugal)", Code = "pt-PT" },
+            new Language() { Name = "Russian (Russia)", Code = "ru-RU" },
+            new Language() { Name = "Swedish (Sweden)", Code = "sv-SE" },
+            new Language() { Name = "Chinese (Mandarin, simplified)", Code = "zh-CN" },
+            new Language() { Name = "Chinese (Mandarin, Traditional)", Code = "zh-HK" },
+            new Language() { Name = "Chinese (Taiwanese Mandarin)", Code = "zh-TW" },
+            new Language() { Name = "Thai (Thailand)", Code = "th-TH" },
+        };
+
+        private VoiceLanguage[] voices = {
+            new VoiceLanguage() { Locale = "ar-EG*", Language="Arabic (Egypt)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)" },
+            new VoiceLanguage() { Locale = "ar-SA", Language="Arabic (Saudi Arabia)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (ar-SA, Naayf)" },
+            new VoiceLanguage() { Locale = "bg-BG", Language="Bulgarian", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (bg-BG, Ivan)" },
+            new VoiceLanguage() { Locale = "ca-ES", Language="Catalan (Spain)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)" },
+            new VoiceLanguage() { Locale = "cs-CZ", Language="Czech", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (cs-CZ, Jakub)" },
+            new VoiceLanguage() { Locale = "da-DK", Language="Danish", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (da-DK, HelleRUS)"},
+            new VoiceLanguage() { Locale = "de-AT", Language="German (Austria)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (de-AT, Michael)"},
+            new VoiceLanguage() { Locale = "de-CH", Language="German (Switzerland)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (de-CH, Karsten)" },
+            new VoiceLanguage() { Locale = "de-DE", Language="German (Germany)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)" },
+            new VoiceLanguage() { Locale = "de-DE", Language="German (Germany)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (de-DE, HeddaRUS)" },
+            new VoiceLanguage() { Locale = "de-DE", Language="German (Germany)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)" },
+            new VoiceLanguage() { Locale = "el-GR", Language="Greek", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (el-GR, Stefanos)" },
+            new VoiceLanguage() { Locale = "en-AU", Language="English (Australia)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)" },
+            new VoiceLanguage() { Locale = "en-AU", Language="English (Australia)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-AU, HayleyRUS)" },
+            new VoiceLanguage() { Locale = "en-CA", Language="English (Canada)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-CA, Linda)" },
+            new VoiceLanguage() { Locale = "en-CA", Language="English (Canada)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-CA, HeatherRUS)" },
+            new VoiceLanguage() { Locale = "en-GB", Language="English (UK)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)" },
+            new VoiceLanguage() { Locale = "en-GB", Language="English (UK)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-GB, Susan, HazelRUS)" },
+            new VoiceLanguage() { Locale = "en-GB", Language="English (UK)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)" },
+            new VoiceLanguage() { Locale = "en-IE", Language="English (Ireland)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-IE, Sean)"},
+            new VoiceLanguage() { Locale = "en-IN", Language="English (India)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-IN, Heera, Apollo)" },
+            new VoiceLanguage() { Locale = "en-IN", Language="English (India)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-IN, Heera, PriyaRUS)" },
+            new VoiceLanguage() { Locale = "en-IN", Language="English (India)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-IN, Ravi, Apollo)" },
+            new VoiceLanguage() { Locale = "en-US", Language="English (US)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)" },
+            new VoiceLanguage() { Locale = "en-US", Language="English (US)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)" },
+            new VoiceLanguage() { Locale = "en-US", Language="English (US)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)" },
+            new VoiceLanguage() { Locale = "en-US", Language="English (US)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)" },
+            new VoiceLanguage() { Locale = "en-US", Language="English (US)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (en-US, Guy24kRUS)" },
+            new VoiceLanguage() { Locale = "es-ES", Language="Spanish (Spain)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)" },
+            new VoiceLanguage() { Locale = "es-ES", Language="Spanish (Spain)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (es-ES, HelenaRUS)" },
+            new VoiceLanguage() { Locale = "es-ES", Language="Spanish (Spain)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)" },
+            new VoiceLanguage() { Locale = "es-MX", Language="Spanish (Mexico)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)" },
+            new VoiceLanguage() { Locale = "es-MX", Language="Spanish (Mexico)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (es-MX, Raul, Apollo)" },
+            new VoiceLanguage() { Locale = "fi-FI", Language="Finnish", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)" },
+            new VoiceLanguage() { Locale = "fr-CA", Language="French (Canada)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)" },
+            new VoiceLanguage() { Locale = "fr-CA", Language="French (Canada)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-CA, HarmonieRUS)" },
+            new VoiceLanguage() { Locale = "fr-CH", Language="French (Switzerland)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-CH, Guillaume)" },
+            new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)" },
+            new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, HortenseRUS)" },
+            new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
         };
 
         private string subscriptionKey;
@@ -39,9 +114,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private Language language;
         private Language translationLanguage;
         private Language textToSpeechLanguage;
+        private VoiceLanguage selectedVoice;
         private string partialOutput;
         private string debugOutput;
         private string lastOutput;
+        private Uri lastOutputFile;
 
         public MainWindowViewModel()
         {
@@ -59,9 +136,13 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
         public Language TextToSpeechLanguage { get => textToSpeechLanguage; set => Set(nameof(TextToSpeechLanguage), ref textToSpeechLanguage, value); }
+        public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
+        public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
+        public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
+        public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
         public bool IsRecoznizingRunning
         {
@@ -77,7 +158,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                 }
             }
         }
-        public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
 
         private void LoadKeys()
         {
@@ -117,7 +197,23 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             azureSpeech = new AzureSpeechManager();
             azureSpeech.Recognizing += OnAzureSpeechRecognizing;
             azureSpeech.Notification += OnAzureSpeechNotification;
+            azureSpeech.TranslationSynthesizing += OnAzureSpeechTranslationSynthesizing;
             azureSpeech.Initialize(subcription, region);
+        }
+
+        private void OnAzureSpeechTranslationSynthesizing(object sender, TranslationSynthesisEventArgs e)
+        {
+            byte[] buffer = e.Result.GetAudio();
+            string outputFile = Path.GetTempFileName();
+            outputFile = Path.Combine(Path.GetDirectoryName(outputFile), string.Concat(Path.GetFileNameWithoutExtension(outputFile), ".wav"));
+            using (FileStream fs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+            {
+                fs.Write(buffer, 0, buffer.Length);
+            }
+
+            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, $"Saved output wave file in {outputFile}");
+
+            LastOutputFile = new Uri(outputFile, UriKind.RelativeOrAbsolute);
         }
 
         private void DestoyAzureSpeechManager()
@@ -151,7 +247,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
             if (azureSpeech != null)
             {
-                azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code);
+                azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code, SelectedVoice.VoiceName);
                 await azureSpeech.CreateTranslationRecognizer();
                 await azureSpeech.StartContinuousRecognitionAsync();
             }

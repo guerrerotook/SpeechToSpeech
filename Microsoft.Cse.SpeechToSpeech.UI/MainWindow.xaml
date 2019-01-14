@@ -41,8 +41,9 @@
                     <RowDefinition Height="*" MinHeight="200"/>
                     <RowDefinition Height="auto" MaxHeight="330"/>
                 </Grid.RowDefinitions>
-                <TextBox TextWrapping="Wrap" Text="{Binding DebugOutput}" Margin="5,30,10,10" VerticalScrollBarVisibility="Visible"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding DebugOutput}" Margin="5,30,10,171.5" VerticalScrollBarVisibility="Visible"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Debug output" VerticalAlignment="Top" Margin="5,10,0,0"/>
+                <MediaElement x:Name="media" Height="156.5" VerticalAlignment="Bottom" Margin="10,0,10,10" ScrubbingEnabled="True" Source="{Binding LastOutputFile}"/>
             </Grid>
 
             <Grid Grid.Column="2" >
@@ -106,13 +107,26 @@
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
-                                    <TextBlock TextWrapping="Wrap" Text="Trasnlated target language" Margin="10,0,0,0"/>
+                                    <TextBlock TextWrapping="Wrap" Text="Translated target language" Margin="10,0,0,0"/>
                                     <ComboBox Margin="10" ItemsSource="{Binding Languages}" SelectedItem="{Binding TranslationLanguage, Mode=TwoWay}"  >
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
                                                     <TextBlock Text="{Binding Name}" />
                                                     <TextBlock Text="{Binding Code}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <TextBlock TextWrapping="Wrap" Text="Voice language" Margin="10,0,0,0"/>
+                                    <ComboBox Margin="10" ItemsSource="{Binding Voices}" SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"  >
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Locale}" />
+                                                    <TextBlock Text="{Binding Language}" />
+                                                    <TextBlock Text="{Binding Gender}" />
+                                                    <TextBlock Text="{Binding VoiceName}" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>

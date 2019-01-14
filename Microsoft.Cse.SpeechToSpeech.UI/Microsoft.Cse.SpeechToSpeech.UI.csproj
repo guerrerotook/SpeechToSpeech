@@ -72,11 +72,20 @@
     <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.2.0\lib\net461\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Toolkit.Wpf.UI.Controls, Version=5.0.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Toolkit.Wpf.UI.Controls.5.0.1\lib\net462\Microsoft.Toolkit.Wpf.UI.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Toolkit.Wpf.UI.XamlHost, Version=5.0.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Toolkit.Wpf.UI.XamlHost.5.0.1\lib\net462\Microsoft.Toolkit.Wpf.UI.XamlHost.dll</HintPath>
+    </Reference>
     <Reference Include="SpeechClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=720c26922c782415, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ProjectOxford.SpeechRecognition-x64.1.0.0.7\lib\SpeechClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -103,6 +112,7 @@
     <Compile Include="Ensure.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\SpeechModel.cs" />
+    <Compile Include="Model\VoiceLanguage.cs" />
     <Compile Include="Speech\AzureSpeechManager.cs" />
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />
