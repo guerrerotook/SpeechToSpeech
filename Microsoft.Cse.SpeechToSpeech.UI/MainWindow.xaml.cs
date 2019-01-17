@@ -42,7 +42,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
         {
             EnableButtons();
 
-            
+
         }
 
         private void EnableButtons()
@@ -68,21 +68,31 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
 
         private void OnSaveKeysClick(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private async void OnStartClick(object sender, RoutedEventArgs e)
         {
             Button target = (Button)sender;
-            if (viewModel.IsRecoznizingRunning)
+            target.IsEnabled = false;
+            try
             {
-                target.Content = "Start";
-                await viewModel.StopRecognizer();
+                if (viewModel.IsRecoznizingRunning)
+                {
+                    target.Content = "Stopping...";
+                    await viewModel.StopRecognizer();
+                    target.Content = "Start";
+                }
+                else
+                {
+                    target.Content = "Starting...";
+                    await viewModel.StartRecognizer();
+                    target.Content = "Stop";
+                }
             }
-            else
+            finally
             {
-                target.Content = "Stop";
-                await viewModel.StartRecognizer();
+                target.IsEnabled = true;
             }
         }
     }
