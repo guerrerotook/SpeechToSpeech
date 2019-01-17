@@ -1,4 +1,4 @@
-﻿using Microsoft.Cse.SpeechToSpeech.UI.Speech;
+using Microsoft.Cse.SpeechToSpeech.UI.Speech;
 using Microsoft.Cse.SpeechToSpeech.UI.Storage;
 using Microsoft.Cse.SpeechToSpeech.UI.ViewModel;
 using System;
@@ -77,7 +77,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
             target.IsEnabled = false;
             try
             {
-                if (viewModel.IsRecoznizingRunning)
+                if (viewModel.IsRecognizerRunning)
                 {
                     target.Content = "Stopping...";
                     await viewModel.StopRecognizer();

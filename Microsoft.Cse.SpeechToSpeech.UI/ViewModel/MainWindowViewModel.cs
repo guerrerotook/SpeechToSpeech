@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Cse.SpeechToSpeech.UI.Model;
 using Microsoft.Cse.SpeechToSpeech.UI.Speech;
@@ -144,7 +144,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public IEnumerable<string> Regions { get => regions; }
         public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
-        public bool IsRecoznizingRunning => azureSpeech?.IsSessionStarted ?? false;
+        public bool IsRecognizerRunning => azureSpeech?.IsSessionStarted ?? false;
 
         private void LoadKeys()
         {
