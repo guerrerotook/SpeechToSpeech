@@ -137,7 +137,7 @@
                             </Expander>
                             <Expander  Header="Text to Speech" Margin="10,10,10,0">
                                 <StackPanel Margin="10">
-                                    <TextBlock Text="Subscription Key:" />
+                                    <TextBlock Text="Text to Speech language:" />
                                     <ComboBox Margin="10" ItemsSource="{Binding Languages}" SelectedItem="{Binding TextToSpeechLanguage, Mode=TwoWay}"  >
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
