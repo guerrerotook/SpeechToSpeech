@@ -166,6 +166,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             }
         }
 
+        private void AppendDebug(string message)
+        {
+            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, message);
+        }
+
         private void SaveAzureSpeechKey()
         {
             if (!string.IsNullOrEmpty(SubscriptionKey))
@@ -198,7 +203,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                 fs.Write(buffer, 0, buffer.Length);
             }
 
-            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, $"Saved output wave file in {outputFile}");
+            AppendDebug($"Saved output wave file in {outputFile}");
 
             LastOutputFile = new Uri(outputFile, UriKind.RelativeOrAbsolute);
         }
@@ -213,7 +218,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
         {
-            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, e.Message);
+            AppendDebug(e.Message);
         }
 
         private void OnAzureSpeechRecognizing(object sender, TranslationRecognitionEventArgs e)
@@ -224,28 +229,59 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         public async Task StartRecognizer()
         {
-            if (azureSpeech == null)
+            try
             {
-                if (!string.IsNullOrEmpty(CustomModelEndpointId) && !string.IsNullOrEmpty(SubscriptionKey))
+                if (azureSpeech == null)
                 {
+                    if (string.IsNullOrEmpty(CustomModelEndpointId))
+                    {
+                        AppendDebug("CustomModelEndpointId must be specified");
+                        return;
+                    }
+                    if (string.IsNullOrEmpty(SubscriptionKey))
+                    {
+                        AppendDebug("SubscriptionKey must be specified");
+                        return;
+                    }
                     CreateAzureSpeechManager(SubscriptionKey, CustomModelEndpointId);
                 }
-            }
+                if (Language == null)
+                {
+                    AppendDebug("Language must be specified");
+                    return;
+                }
+                if (TranslationLanguage == null)
+                {
+                    AppendDebug("Translation language must be specified");
+                    return;
+                }
+                if (SelectedVoice == null)
+                {
+                    AppendDebug("Voice must be specified");
+                    return;
+                }
 
-            if (azureSpeech != null)
-            {
                 azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code, SelectedVoice.VoiceName);
                 await azureSpeech.CreateTranslationRecognizer();
                 await azureSpeech.StartContinuousRecognitionAsync();
             }
+            catch (Exception ex)
+            {
+                AppendDebug($"Exception: {ex.Message}");
+            }
         }
-
         public async Task StopRecognizer()
         {
-            if (azureSpeech != null)
+            try
             {
-                await azureSpeech.StopContinuousRecognitionAsync();
-                DestoyAzureSpeechManager();
+                if (azureSpeech != null)
+                {
+                    await azureSpeech.StopContinuousRecognitionAsync();
+                    DestoyAzureSpeechManager();
+                }
+            }catch(Exception ex)
+            {
+                AppendDebug($"Exception: {ex.Message}");
             }
         }
     }
