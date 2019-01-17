@@ -144,20 +144,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public IEnumerable<string> Regions { get => regions; }
         public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
-        public bool IsRecoznizingRunning
-        {
-            get
-            {
-                if (azureSpeech != null)
-                {
-                    return azureSpeech.IsSessionStarted;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        public bool IsRecoznizingRunning => azureSpeech?.IsSessionStarted ?? false;
 
         private void LoadKeys()
         {
