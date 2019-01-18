@@ -54,9 +54,7 @@
             }
             if (parameter is string parameterString)
             {
-                object result = null;
-                result = Enum.Parse(targetType, (string)parameter);
-                return result;
+                return Enum.Parse(targetType, (string)parameter);
             }
             else if (parameter.GetType() == targetType)
             {
