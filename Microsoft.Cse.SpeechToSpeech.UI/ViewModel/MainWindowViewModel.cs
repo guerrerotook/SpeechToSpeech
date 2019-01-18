@@ -113,7 +113,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private string customModelEndpointId;
         private Language language;
         private Language translationLanguage;
-        private Language textToSpeechLanguage;
         private VoiceLanguage selectedVoice;
         private string partialOutput;
         private string debugOutput;
@@ -135,7 +134,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
-        public Language TextToSpeechLanguage { get => textToSpeechLanguage; set => Set(nameof(TextToSpeechLanguage), ref textToSpeechLanguage, value); }
         public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
         public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
