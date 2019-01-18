@@ -86,17 +86,7 @@
                             </Expander>
                             <Expander Header="Region and Language" IsExpanded="True" Margin="10,10,10,0" >
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock TextWrapping="Wrap" Text="Azure region" Margin="10,0,0,0"/>
-
-
-                                    <ComboBox  x:Name="regionComboBox" Text="Select Region" Margin="10" AllowDrop="True" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" >
-                                        <ComboBoxItem Tag="westus" IsSelected="true" Content="westus"/>
-                                        <ComboBoxItem Tag="westus" Content="westeurope"/>
-                                        <ComboBoxItem Tag="eastasia" Content="eastasia"/>
-                                        <ComboBoxItem Tag="northeurope" Content="northeurope"/>
-                                    </ComboBox>
                                     <TextBlock TextWrapping="Wrap" Text="Original language" Margin="10,0,0,0"/>
-
                                     <ComboBox x:Name="languageComboBox" Text="Select Language" SelectedItem="{Binding Language, Mode=TwoWay}" Margin="10" ItemsSource="{Binding Languages}"  >
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
@@ -150,8 +140,11 @@
                                     </ComboBox>
                                 </StackPanel>
                             </Expander>
-                            <Expander  Header="Change Keys" Margin="10,10,10,0">
+                            <Expander  Header="Speech API config" Margin="10,10,10,0">
                                 <StackPanel Margin="10">
+                                    <TextBlock TextWrapping="Wrap" Text="Azure region" Margin="0,0,0,0"/>
+                                    <ComboBox  x:Name="regionComboBox" Text="Select Region" AllowDrop="True" ItemsSource="{Binding Regions}" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" >
+                                    </ComboBox>
                                     <TextBlock Text="Subscription Key:" />
                                     <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding SubscriptionKey}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
                                     <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=bothRadioButton}" >
