@@ -126,6 +126,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             LoadKeys();
             PropertyChanged += OnSpeechModelPropertyChanged;
 
+            ShowSpeechApiConfigOnStartup = string.IsNullOrEmpty(SubscriptionKey);
         }
 
         public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
@@ -137,6 +138,8 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
         public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
+
+        public bool ShowSpeechApiConfigOnStartup { get;  }
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
