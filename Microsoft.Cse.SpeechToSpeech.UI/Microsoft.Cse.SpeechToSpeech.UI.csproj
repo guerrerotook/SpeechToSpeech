@@ -109,7 +109,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\ComboBoxValueConverter.cs" />
+    <Compile Include="Converter\EnumValueMatchesValueConverter.cs" />
     <Compile Include="Ensure.cs" />
+    <Compile Include="Model\InputSource.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\SpeechModel.cs" />
     <Compile Include="Model\VoiceLanguage.cs" />

@@ -4,11 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI"
-        xmlns:Converter="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI.Converter" x:Class="Microsoft.Cse.SpeechToSpeech.UI.MainWindow"
+        xmlns:Converter="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI.Converter" 
+        xmlns:model="clr-namespace:Microsoft.Cse.SpeechToSpeech.UI.Model" 
+        x:Class="Microsoft.Cse.SpeechToSpeech.UI.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" d:DesignWidth="754" d:DesignHeight="777">
     <Window.Resources>
         <Converter:ComboBoxValueConverter x:Key="ComboBoxValueConverter"/>
+        <Converter:EnumValueMatchesValueConverter x:Key="enumValueMatchesConverter" />
         <BooleanToVisibilityConverter x:Key="b2v" />
     </Window.Resources>
     <Grid Margin="5">
@@ -82,11 +85,11 @@
                             </Expander>
                             <Expander  Header="Input Source"  x:Name="radioGroup" Margin="10,10,10,0">
                                 <StackPanel Orientation="Vertical">
-                                    <RadioButton x:Name="micRadioButton" IsChecked="{Binding UseMicrophone, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use Microphone"/>
-                                    <RadioButton x:Name="fileInputRadioButton" IsChecked="{Binding UseFileInput, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use wav file"/>
-                                    <StackPanel Orientation="Vertical" Grid.Row="1"  Margin="10">
+                                    <RadioButton x:Name="micRadioButton" IsChecked="{Binding InputSource, Converter={StaticResource enumValueMatchesConverter}, ConverterParameter={x:Static model:InputSourceType.Microphone}}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use Microphone"/>
+                                    <RadioButton x:Name="fileInputRadioButton" IsChecked="{Binding InputSource, Converter={StaticResource enumValueMatchesConverter}, ConverterParameter={x:Static model:InputSourceType.WavFile}}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use wav file"/>
+                                    <StackPanel Orientation="Vertical" Grid.Row="1"  Margin="10" IsEnabled="{Binding InputSource, Converter={StaticResource enumValueMatchesConverter}, ConverterParameter={x:Static model:InputSourceType.WavFile}}">
                                         <Button  x:Name="selectFileButton" Content="Select File" Margin="0,5,0,5" Click="OnSelectFileButtonClick" Height="35" VerticalAlignment="Top"/>
-                                        <TextBox x:Name="fileNameTextBox" MaxWidth="210" Padding="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="whatstheweatherlike.wav"
+                                        <TextBox x:Name="fileNameTextBox"  Padding="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding Wav}"
                                                 ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"  />
 
                                     </StackPanel>
@@ -152,7 +155,6 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Button x:Name="startButton" Grid.Row="0" Content="Start" Click="OnStartClick" Margin="10" Padding="15" VerticalAlignment="Top"/>
-                    <Button x:Name="stopButton" Grid.Row="1" Content="Stop" Click="OnStartClick" Margin="10" Padding="15" VerticalAlignment="Bottom" Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=micRadioButton}"/>
                 </Grid>
             </Grid>
         </Grid>

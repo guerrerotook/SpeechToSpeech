@@ -59,7 +59,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
             {
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    fileNameTextBox.Text = fileDialog.FileName;
+                    viewModel.WavInputFilename = fileDialog.FileName;
                 }
             }
         }
