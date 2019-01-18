@@ -150,12 +150,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         {
             CustomModelEndpointId = IsolatedStorageManager.GetValueFromIsolatedStorage(endpointIdFileName);
             SubscriptionKey = IsolatedStorageManager.GetValueFromIsolatedStorage(subscriptionKeyFileName);
-
-            if (!string.IsNullOrEmpty(CustomModelEndpointId) && !string.IsNullOrEmpty(SubscriptionKey))
-            {
-                CreateAzureSpeechManager(SubscriptionKey, CustomModelEndpointId);
-
-            }
         }
 
         private void OnSpeechModelPropertyChanged(object sender, PropertyChangedEventArgs e)
