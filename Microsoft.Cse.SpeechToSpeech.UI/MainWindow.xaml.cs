@@ -41,8 +41,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
         private void OnInputButtonClick(object sender, RoutedEventArgs e)
         {
             EnableButtons();
-
-
         }
 
         private void EnableButtons()
@@ -64,11 +62,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
                     fileNameTextBox.Text = fileDialog.FileName;
                 }
             }
-        }
-
-        private void OnSaveKeysClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private async void OnStartClick(object sender, RoutedEventArgs e)

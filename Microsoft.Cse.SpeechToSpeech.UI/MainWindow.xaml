@@ -155,7 +155,6 @@
                                         <TextBlock Text="CRIS Model ID:"/>
                                         <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
                                     </StackPanel>
-                                    <Button Margin="0,5,0,0" Padding="5" Height="35" VerticalAlignment="Top" Click="OnSaveKeysClick" Content="Save Keys"/>
                                 </StackPanel>
                             </Expander>
                             <StackPanel Orientation="Vertical" Margin="10,10,10,0" >
