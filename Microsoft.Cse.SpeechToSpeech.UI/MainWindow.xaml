@@ -83,7 +83,7 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Expander>
-                            <Expander  Header="Input Source"  x:Name="radioGroup" Margin="10,10,10,0">
+                            <Expander  Header="Input Source"  x:Name="radioGroup" Margin="10,10,10,0" IsExpanded="true">
                                 <StackPanel Orientation="Vertical">
                                     <RadioButton x:Name="micRadioButton" IsChecked="{Binding InputSource, Converter={StaticResource enumValueMatchesConverter}, ConverterParameter={x:Static model:InputSourceType.Microphone}}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use Microphone"/>
                                     <RadioButton x:Name="fileInputRadioButton" IsChecked="{Binding InputSource, Converter={StaticResource enumValueMatchesConverter}, ConverterParameter={x:Static model:InputSourceType.WavFile}}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use wav file"/>
@@ -96,14 +96,14 @@
                                 </StackPanel>
                             </Expander>
 
-                            <Expander Header="Recognition Type" x:Name="selectRecoType" Margin="10,10,10,0" >
+                            <Expander Header="Recognition Type" x:Name="selectRecoType" Margin="10,10,10,0" IsEnabled="false">
                                 <StackPanel Orientation="Vertical">
                                     <RadioButton x:Name="basicRadioButton" IsChecked="{Binding UseBaseModel, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Baseline Model"/>
                                     <RadioButton x:Name="customRadioButton" IsChecked="{Binding UseCustomModel, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Custom Model"/>
                                     <RadioButton x:Name="bothRadioButton" IsChecked="{Binding UseBaseAndCustomModels, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Both"/>
                                 </StackPanel>
                             </Expander>
-                            <Expander Header="Region and Language" IsExpanded="True" Margin="10,10,10,0" >
+                            <Expander Header="Languages" IsExpanded="True" Margin="10,10,10,0" >
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock TextWrapping="Wrap" Text="Original language" Margin="10,0,0,0"/>
                                     <ComboBox x:Name="languageComboBox" Text="Select Language" SelectedItem="{Binding Language, Mode=TwoWay}" Margin="10" ItemsSource="{Binding Languages}"  >
