@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Cse.SpeechToSpeech.UI.Model;
 using Microsoft.Cse.SpeechToSpeech.UI.Speech;
@@ -113,7 +113,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private string customModelEndpointId;
         private Language language;
         private Language translationLanguage;
-        private Language textToSpeechLanguage;
         private VoiceLanguage selectedVoice;
         private string partialOutput;
         private string debugOutput;
@@ -127,6 +126,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             LoadKeys();
             PropertyChanged += OnSpeechModelPropertyChanged;
 
+            ShowSpeechApiConfigOnStartup = string.IsNullOrEmpty(SubscriptionKey);
         }
 
         public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
@@ -135,40 +135,22 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
-        public Language TextToSpeechLanguage { get => textToSpeechLanguage; set => Set(nameof(TextToSpeechLanguage), ref textToSpeechLanguage, value); }
         public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
         public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
+
+        public bool ShowSpeechApiConfigOnStartup { get;  }
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
         public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
-        public bool IsRecoznizingRunning
-        {
-            get
-            {
-                if (azureSpeech != null)
-                {
-                    return azureSpeech.IsSessionStarted;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        public bool IsRecognizerRunning => azureSpeech?.IsSessionStarted ?? false;
 
         private void LoadKeys()
         {
             CustomModelEndpointId = IsolatedStorageManager.GetValueFromIsolatedStorage(endpointIdFileName);
             SubscriptionKey = IsolatedStorageManager.GetValueFromIsolatedStorage(subscriptionKeyFileName);
-
-            if (!string.IsNullOrEmpty(CustomModelEndpointId) && !string.IsNullOrEmpty(SubscriptionKey))
-            {
-                CreateAzureSpeechManager(SubscriptionKey, CustomModelEndpointId);
-
-            }
         }
 
         private void OnSpeechModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -177,6 +159,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             {
                 SaveAzureSpeechKey();
             }
+        }
+
+        private void AppendDebug(string message)
+        {
+            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, message);
         }
 
         private void SaveAzureSpeechKey()
@@ -211,7 +198,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                 fs.Write(buffer, 0, buffer.Length);
             }
 
-            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, $"Saved output wave file in {outputFile}");
+            AppendDebug($"Saved output wave file in {outputFile}");
 
             LastOutputFile = new Uri(outputFile, UriKind.RelativeOrAbsolute);
         }
@@ -226,7 +213,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
         {
-            DebugOutput = string.Concat(DebugOutput, Environment.NewLine, e.Message);
+            AppendDebug(e.Message);
         }
 
         private void OnAzureSpeechRecognizing(object sender, TranslationRecognitionEventArgs e)
@@ -237,28 +224,59 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
         public async Task StartRecognizer()
         {
-            if (azureSpeech == null)
+            try
             {
-                if (!string.IsNullOrEmpty(CustomModelEndpointId) && !string.IsNullOrEmpty(SubscriptionKey))
+                if (azureSpeech == null)
                 {
+                    if (string.IsNullOrEmpty(CustomModelEndpointId))
+                    {
+                        AppendDebug("CustomModelEndpointId must be specified");
+                        return;
+                    }
+                    if (string.IsNullOrEmpty(SubscriptionKey))
+                    {
+                        AppendDebug("SubscriptionKey must be specified");
+                        return;
+                    }
                     CreateAzureSpeechManager(SubscriptionKey, CustomModelEndpointId);
                 }
-            }
+                if (Language == null)
+                {
+                    AppendDebug("Language must be specified");
+                    return;
+                }
+                if (TranslationLanguage == null)
+                {
+                    AppendDebug("Translation language must be specified");
+                    return;
+                }
+                if (SelectedVoice == null)
+                {
+                    AppendDebug("Voice must be specified");
+                    return;
+                }
 
-            if (azureSpeech != null)
-            {
                 azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code, SelectedVoice.VoiceName);
                 await azureSpeech.CreateTranslationRecognizer();
                 await azureSpeech.StartContinuousRecognitionAsync();
             }
+            catch (Exception ex)
+            {
+                AppendDebug($"Exception: {ex.Message}");
+            }
         }
-
         public async Task StopRecognizer()
         {
-            if (azureSpeech != null)
+            try
             {
-                await azureSpeech.StopContinuousRecognitionAsync();
-                DestoyAzureSpeechManager();
+                if (azureSpeech != null)
+                {
+                    await azureSpeech.StopContinuousRecognitionAsync();
+                    DestoyAzureSpeechManager();
+                }
+            }catch(Exception ex)
+            {
+                AppendDebug($"Exception: {ex.Message}");
             }
         }
     }

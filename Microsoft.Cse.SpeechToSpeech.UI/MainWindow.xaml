@@ -64,6 +64,22 @@
                         </Expander.Header>
 
                         <StackPanel x:Name="optionPanel">
+                            <Expander  Header="Speech API config" Margin="10,10,10,0" IsExpanded="{Binding ShowSpeechApiConfigOnStartup, Mode=OneTime}">
+                                <StackPanel Margin="10">
+                                    <TextBlock TextWrapping="Wrap" Text="Azure region" Margin="0,0,0,0"/>
+                                    <ComboBox  x:Name="regionComboBox" Text="Select Region" AllowDrop="True" ItemsSource="{Binding Regions}" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" />
+                                    <TextBlock Text="Subscription Key:" />
+                                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding SubscriptionKey}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                    <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=bothRadioButton}" >
+                                        <TextBlock Text="CRIS Model ID:"/>
+                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                    </StackPanel>
+                                    <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=customRadioButton}" >
+                                        <TextBlock Text="CRIS Model ID:"/>
+                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
                             <Expander  Header="Input Source"  x:Name="radioGroup" Margin="10,10,10,0">
                                 <StackPanel Orientation="Vertical">
                                     <RadioButton x:Name="micRadioButton" IsChecked="{Binding UseMicrophone, ElementName=mainWindow}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use Microphone"/>
@@ -86,17 +102,7 @@
                             </Expander>
                             <Expander Header="Region and Language" IsExpanded="True" Margin="10,10,10,0" >
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock TextWrapping="Wrap" Text="Azure region" Margin="10,0,0,0"/>
-
-
-                                    <ComboBox  x:Name="regionComboBox" Text="Select Region" Margin="10" AllowDrop="True" SelectedItem="{Binding CustomModelEndpointId, Converter={StaticResource ComboBoxValueConverter}}" >
-                                        <ComboBoxItem Tag="westus" IsSelected="true" Content="westus"/>
-                                        <ComboBoxItem Tag="westus" Content="westeurope"/>
-                                        <ComboBoxItem Tag="eastasia" Content="eastasia"/>
-                                        <ComboBoxItem Tag="northeurope" Content="northeurope"/>
-                                    </ComboBox>
                                     <TextBlock TextWrapping="Wrap" Text="Original language" Margin="10,0,0,0"/>
-
                                     <ComboBox x:Name="languageComboBox" Text="Select Language" SelectedItem="{Binding Language, Mode=TwoWay}" Margin="10" ItemsSource="{Binding Languages}"  >
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
@@ -131,38 +137,6 @@
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
-
-
-                                </StackPanel>
-                            </Expander>
-                            <Expander  Header="Text to Speech" Margin="10,10,10,0">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="Subscription Key:" />
-                                    <ComboBox Margin="10" ItemsSource="{Binding Languages}" SelectedItem="{Binding TextToSpeechLanguage, Mode=TwoWay}"  >
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Name}" />
-                                                    <TextBlock Text="{Binding Code}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
-                            </Expander>
-                            <Expander  Header="Change Keys" Margin="10,10,10,0">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="Subscription Key:" />
-                                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding SubscriptionKey}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
-                                    <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=bothRadioButton}" >
-                                        <TextBlock Text="CRIS Model ID:"/>
-                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
-                                    </StackPanel>
-                                    <StackPanel Visibility="{Binding IsChecked, Converter={StaticResource b2v}, ElementName=customRadioButton}" >
-                                        <TextBlock Text="CRIS Model ID:"/>
-                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2" Text="{Binding CustomModelEndpointId, ElementName=mainWindow, Mode=TwoWay}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
-                                    </StackPanel>
-                                    <Button Margin="0,5,0,0" Padding="5" Height="35" VerticalAlignment="Top" Click="OnSaveKeysClick" Content="Save Keys"/>
                                 </StackPanel>
                             </Expander>
                             <StackPanel Orientation="Vertical" Margin="10,10,10,0" >

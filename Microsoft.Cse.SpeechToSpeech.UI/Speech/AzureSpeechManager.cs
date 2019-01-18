@@ -9,7 +9,7 @@
     public class AzureSpeechManager : IDisposable
     {
         private SpeechTranslationConfig speechConfiguration;
-        private TranslationRecognizer recognized;
+        private TranslationRecognizer recognizer;
         public bool IsSessionStarted { get; set; }
         public bool IsSessionStopped { get; set; }
         public string SessionId { get; set; }
@@ -42,20 +42,20 @@
 
         public async Task CreateTranslationRecognizer()
         {
-            if (recognized != null)
+            if (recognizer != null)
             {
-                await recognized.StopContinuousRecognitionAsync();
-                await recognized.StopKeywordRecognitionAsync();
+                await recognizer.StopContinuousRecognitionAsync();
+                await recognizer.StopKeywordRecognitionAsync();
 
             }
 
-            recognized = new TranslationRecognizer(speechConfiguration);
-            recognized.Recognizing += OnSpeechRecognizing;
-            recognized.SessionStarted += OnSessionStarted;
-            recognized.SessionStopped += OnSessionStopped;
-            recognized.Recognized += OnRecognized;
-            recognized.Synthesizing += OnSynthesizing;
-            recognized.Canceled += OnCanceled;
+            recognizer = new TranslationRecognizer(speechConfiguration);
+            recognizer.Recognizing += OnSpeechRecognizing;
+            recognizer.SessionStarted += OnSessionStarted;
+            recognizer.SessionStopped += OnSessionStopped;
+            recognizer.Recognized += OnRecognized;
+            recognizer.Synthesizing += OnSynthesizing;
+            recognizer.Canceled += OnCanceled;
         }
 
         private void SendMessage(string value)
@@ -80,12 +80,12 @@
 
         public Task StartContinuousRecognitionAsync()
         {
-            return recognized.StartContinuousRecognitionAsync();
+            return recognizer.StartContinuousRecognitionAsync();
         }
 
         public Task StopContinuousRecognitionAsync()
         {
-            return recognized.StopContinuousRecognitionAsync();
+            return recognizer.StopContinuousRecognitionAsync();
         }
 
         private void OnSessionStopped(object sender, SessionEventArgs e)
@@ -110,13 +110,13 @@
 
         public void Dispose()
         {
-            if (recognized != null)
+            if (recognizer != null)
             {
-                recognized.Recognizing -= OnSpeechRecognizing;
-                recognized.SessionStarted -= OnSessionStarted;
-                recognized.SessionStopped -= OnSessionStopped;
-                recognized.Dispose();
-                recognized = null;
+                recognizer.Recognizing -= OnSpeechRecognizing;
+                recognizer.SessionStarted -= OnSessionStarted;
+                recognizer.SessionStopped -= OnSessionStopped;
+                recognizer.Dispose();
+                recognizer = null;
             }
         }
     }
