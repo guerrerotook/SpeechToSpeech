@@ -12,6 +12,7 @@
     <Window.Resources>
         <Converter:ComboBoxValueConverter x:Key="ComboBoxValueConverter"/>
         <Converter:EnumValueMatchesValueConverter x:Key="enumValueMatchesConverter" />
+        <Converter:StringToUriValueConverter x:Key="StringToUriConverter" />
         <BooleanToVisibilityConverter x:Key="b2v" />
     </Window.Resources>
     <Grid Margin="5">
@@ -46,7 +47,7 @@
                 </Grid.RowDefinitions>
                 <TextBox TextWrapping="Wrap" Text="{Binding DebugOutput}" Margin="5,30,10,171.5" VerticalScrollBarVisibility="Visible"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Debug output" VerticalAlignment="Top" Margin="5,10,0,0"/>
-                <MediaElement x:Name="media" Height="156.5" VerticalAlignment="Bottom" Margin="10,0,10,10" ScrubbingEnabled="True" Source="{Binding LastOutputFile}"/>
+                <MediaElement x:Name="media" Height="156.5" VerticalAlignment="Bottom" Margin="10,0,10,10" ScrubbingEnabled="True" Source="{Binding LastOutputFilename, Converter={StaticResource StringToUriConverter}}"/>
             </Grid>
 
             <Grid Grid.Column="2" >

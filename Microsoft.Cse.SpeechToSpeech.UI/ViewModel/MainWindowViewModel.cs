@@ -117,7 +117,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private string partialOutput;
         private string debugOutput;
         private string lastOutput;
-        private Uri lastOutputFile;
+        private string lastOutputFilename;
         private InputSourceType inputSource = InputSourceType.Microphone;
         private string wavInputFilename;
 
@@ -138,7 +138,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
         public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
-        public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
+        public string LastOutputFilename { get => lastOutputFilename; set => Set(nameof(LastOutputFilename), ref lastOutputFilename, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
         public InputSourceType InputSource { get => inputSource; set => Set(nameof(InputSource), ref inputSource, value); }
         public string WavInputFilename { get => wavInputFilename; set => Set(nameof(WavInputFilename), ref wavInputFilename, value); }
@@ -203,7 +203,18 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
 
             AppendDebug($"Saved output wave file in {outputFileName}");
 
-            LastOutputFile = new Uri(outputFileName, UriKind.RelativeOrAbsolute);
+            SetOutputFilename(outputFileName);
+        }
+
+        private void SetOutputFilename(string outputFileName)
+        {
+            var previousFile = LastOutputFilename;
+            LastOutputFilename = outputFileName;
+
+            if (!string.IsNullOrEmpty(previousFile))
+            {
+                File.Delete(previousFile); // clean up old wav file
+            }
         }
 
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
@@ -278,6 +289,7 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                     azureSpeech.Dispose();
                     azureSpeech = null;
                 }
+                SetOutputFilename(null); // clean up file
             }catch(Exception ex)
             {
                 AppendDebug($"Exception: {ex.Message}");
