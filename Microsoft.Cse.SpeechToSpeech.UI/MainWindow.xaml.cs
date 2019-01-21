@@ -1,4 +1,4 @@
-using Microsoft.Cse.SpeechToSpeech.UI.Speech;
+﻿using Microsoft.Cse.SpeechToSpeech.UI.Speech;
 using Microsoft.Cse.SpeechToSpeech.UI.Storage;
 using Microsoft.Cse.SpeechToSpeech.UI.ViewModel;
 using System;

@@ -1,4 +1,4 @@
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Cse.SpeechToSpeech.UI.Model;
 using Microsoft.Cse.SpeechToSpeech.UI.Speech;
@@ -187,16 +187,18 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private void OnAzureSpeechTranslationSynthesizing(object sender, TranslationSynthesisEventArgs e)
         {
             byte[] buffer = e.Result.GetAudio();
-            string outputFile = Path.GetTempFileName();
-            outputFile = Path.Combine(Path.GetDirectoryName(outputFile), string.Concat(Path.GetFileNameWithoutExtension(outputFile), ".wav"));
-            using (FileStream fs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+            string tempFilename = Path.GetTempFileName();
+
+            string outputFileName = Path.ChangeExtension(tempFilename, ".wav");
+            File.Delete(tempFilename); // clean up .tmp file
+            using (FileStream fs = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(buffer, 0, buffer.Length);
             }
 
-            AppendDebug($"Saved output wave file in {outputFile}");
+            AppendDebug($"Saved output wave file in {outputFileName}");
 
-            LastOutputFile = new Uri(outputFile, UriKind.RelativeOrAbsolute);
+            LastOutputFile = new Uri(outputFileName, UriKind.RelativeOrAbsolute);
         }
 
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
