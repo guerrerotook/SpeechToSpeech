@@ -118,6 +118,8 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private string debugOutput;
         private string lastOutput;
         private Uri lastOutputFile;
+        private InputSourceType inputSource = InputSourceType.Microphone;
+        private string wavInputFilename;
 
         public MainWindowViewModel()
         {
@@ -138,14 +140,17 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public string LastOutput { get => lastOutput; set => Set(nameof(LastOutput), ref lastOutput, value); }
         public Uri LastOutputFile { get => lastOutputFile; set => Set(nameof(LastOutputFile), ref lastOutputFile, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
+        public InputSourceType InputSource { get => inputSource; set => Set(nameof(InputSource), ref inputSource, value); }
+        public string WavInputFilename { get => wavInputFilename; set => Set(nameof(WavInputFilename), ref wavInputFilename, value); }
 
         public bool ShowSpeechApiConfigOnStartup { get;  }
+
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
         public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
-        public bool IsRecognizerRunning => azureSpeech?.IsSessionStarted ?? false;
+        public bool IsRecognizerRunning => azureSpeech!=null;
 
         private void LoadKeys()
         {
@@ -179,15 +184,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             }
         }
 
-        private void CreateAzureSpeechManager(string subcription, string region)
-        {
-            azureSpeech = new AzureSpeechManager();
-            azureSpeech.Recognizing += OnAzureSpeechRecognizing;
-            azureSpeech.Notification += OnAzureSpeechNotification;
-            azureSpeech.TranslationSynthesizing += OnAzureSpeechTranslationSynthesizing;
-            azureSpeech.Initialize(subcription, region);
-        }
-
         private void OnAzureSpeechTranslationSynthesizing(object sender, TranslationSynthesisEventArgs e)
         {
             byte[] buffer = e.Result.GetAudio();
@@ -201,14 +197,6 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             AppendDebug($"Saved output wave file in {outputFile}");
 
             LastOutputFile = new Uri(outputFile, UriKind.RelativeOrAbsolute);
-        }
-
-        private void DestoyAzureSpeechManager()
-        {
-            azureSpeech.Recognizing -= OnAzureSpeechRecognizing;
-            azureSpeech.Notification -= OnAzureSpeechNotification;
-            azureSpeech.Dispose();
-            azureSpeech = null;
         }
 
         private void OnAzureSpeechNotification(object sender, NotificationEventArgs e)
@@ -238,7 +226,12 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                         AppendDebug("SubscriptionKey must be specified");
                         return;
                     }
-                    CreateAzureSpeechManager(SubscriptionKey, CustomModelEndpointId);
+                    azureSpeech = new AzureSpeechManager();
+                    azureSpeech.Recognizing += OnAzureSpeechRecognizing;
+                    azureSpeech.Notification += OnAzureSpeechNotification;
+                    azureSpeech.TranslationSynthesizing += OnAzureSpeechTranslationSynthesizing;
+                    azureSpeech.Initialize(SubscriptionKey, CustomModelEndpointId, inputSource, wavInputFilename);
+
                 }
                 if (Language == null)
                 {
@@ -272,7 +265,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                 if (azureSpeech != null)
                 {
                     await azureSpeech.StopContinuousRecognitionAsync();
-                    DestoyAzureSpeechManager();
+                    azureSpeech.Recognizing -= OnAzureSpeechRecognizing;
+                    azureSpeech.Notification -= OnAzureSpeechNotification;
+                    azureSpeech.TranslationSynthesizing -= OnAzureSpeechTranslationSynthesizing;
+                    azureSpeech.Dispose();
+                    azureSpeech = null;
                 }
             }catch(Exception ex)
             {
