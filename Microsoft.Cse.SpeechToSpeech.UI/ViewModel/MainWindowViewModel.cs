@@ -187,6 +187,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         private void OnAzureSpeechTranslationSynthesizing(object sender, TranslationSynthesisEventArgs e)
         {
             byte[] buffer = e.Result.GetAudio();
+            if (buffer.Length == 0)
+            {
+                return;
+            }
+
             string tempFilename = Path.GetTempFileName();
 
             string outputFileName = Path.ChangeExtension(tempFilename, ".wav");
