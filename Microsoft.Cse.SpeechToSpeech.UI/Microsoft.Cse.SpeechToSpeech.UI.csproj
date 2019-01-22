@@ -78,6 +78,9 @@
     <Reference Include="Microsoft.Toolkit.Wpf.UI.XamlHost, Version=5.0.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Toolkit.Wpf.UI.XamlHost.5.0.1\lib\net462\Microsoft.Toolkit.Wpf.UI.XamlHost.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SpeechClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=720c26922c782415, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ProjectOxford.SpeechRecognition-x64.1.0.0.7\lib\SpeechClient.dll</HintPath>
     </Reference>
@@ -120,7 +123,14 @@
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />
     <Compile Include="TextToSpeech\Authentication.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="Translation\TranslationClient.cs" />
+    <Compile Include="Translation\TranslationItem.cs" />
+    <Compile Include="Translation\TranslationResult.cs" />
+    <Compile Include="ViewModel\LanguageList.cs" />
+    <Compile Include="ViewModel\TranslationSpeechViewModel.cs" />
+    <Compile Include="ViewModel\RegionList.cs" />
+    <Compile Include="ViewModel\TextTranslationSpeechViewModel.cs" />
+    <Compile Include="ViewModel\VoiceList.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -23,7 +23,8 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel viewModel;
+        private TranslationSpeechViewModel speechViewModel;
+        private TextTranslationSpeechViewModel textTranslationViewModel;
 
         public MainWindow()
         {
@@ -34,8 +35,11 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
 
         private void OnMainWindowsLoaded(object sender, RoutedEventArgs e)
         {
-            viewModel = new MainWindowViewModel();
-            DataContext = viewModel;
+            speechViewModel = new TranslationSpeechViewModel();
+            speechTab.DataContext = speechViewModel;
+
+            textTranslationViewModel = new TextTranslationSpeechViewModel();
+            textTranslationTab.DataContext = textTranslationViewModel;
         }
 
         private void OnInputButtonClick(object sender, RoutedEventArgs e)
@@ -59,9 +63,14 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
             {
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    viewModel.WavInputFilename = fileDialog.FileName;
+                    speechViewModel.WavInputFilename = fileDialog.FileName;
                 }
             }
+        }
+
+        private void OnTextTranslationStartClick(object sender, RoutedEventArgs e)
+        {
+            var task = textTranslationViewModel.Translate();
         }
 
         private async void OnStartClick(object sender, RoutedEventArgs e)
@@ -70,16 +79,16 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
             target.IsEnabled = false;
             try
             {
-                if (viewModel.IsRecognizerRunning)
+                if (speechViewModel.IsRecognizerRunning)
                 {
                     target.Content = "Stopping...";
-                    await viewModel.StopRecognizer();
+                    await speechViewModel.StopRecognizer();
                     target.Content = "Start";
                 }
                 else
                 {
                     target.Content = "Starting...";
-                    await viewModel.StartRecognizer();
+                    await speechViewModel.StartRecognizer();
                     target.Content = "Stop";
                 }
             }
