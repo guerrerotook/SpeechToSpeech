@@ -110,6 +110,7 @@
     </ApplicationDefinition>
     <Compile Include="Converter\ComboBoxValueConverter.cs" />
     <Compile Include="Converter\EnumValueMatchesValueConverter.cs" />
+    <Compile Include="Converter\StringToUriValueConverter.cs" />
     <Compile Include="Ensure.cs" />
     <Compile Include="Model\InputSource.cs" />
     <Compile Include="Model\Language.cs" />
