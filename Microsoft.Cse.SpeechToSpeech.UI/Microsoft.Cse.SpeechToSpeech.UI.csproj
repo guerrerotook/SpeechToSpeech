@@ -115,6 +115,7 @@
     <Compile Include="Converter\EnumValueMatchesValueConverter.cs" />
     <Compile Include="Converter\StringToUriValueConverter.cs" />
     <Compile Include="Ensure.cs" />
+    <Compile Include="Model\Gender.cs" />
     <Compile Include="Model\InputSource.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\SpeechModel.cs" />
@@ -122,15 +123,18 @@
     <Compile Include="Speech\AzureSpeechManager.cs" />
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />
+    <Compile Include="TextToSpeech\AudioOutputFormat.cs" />
     <Compile Include="TextToSpeech\Authentication.cs" />
+    <Compile Include="TextToSpeech\GenericEventArgs.cs" />
+    <Compile Include="TextToSpeech\Synthesize.cs" />
     <Compile Include="Translation\TranslationClient.cs" />
     <Compile Include="Translation\TranslationItem.cs" />
     <Compile Include="Translation\TranslationResult.cs" />
-    <Compile Include="ViewModel\LanguageList.cs" />
+    <Compile Include="Model\LanguageList.cs" />
     <Compile Include="ViewModel\TranslationSpeechViewModel.cs" />
-    <Compile Include="ViewModel\RegionList.cs" />
+    <Compile Include="Model\RegionList.cs" />
     <Compile Include="ViewModel\TextTranslationSpeechViewModel.cs" />
-    <Compile Include="ViewModel\VoiceList.cs" />
+    <Compile Include="Model\VoiceList.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

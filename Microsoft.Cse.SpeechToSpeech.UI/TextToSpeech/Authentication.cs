@@ -1,40 +1,95 @@
 ﻿namespace Microsoft.Cse.SpeechToSpeech.UI.TextToSpeech
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.IO;
+    using System.Net;
     using System.Net.Http;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// This class demonstrates how to get a valid O-auth token
+    /// </summary>
     public class Authentication
     {
-        private string subscriptionKey;
-        private string tokenFetchUri;
+        // Issue token uri for new unified SpeechService API "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken". 
+        // Note: new unified SpeechService API key and issue token uri is per region
+        public static readonly string AccessUri = "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken";
+        private string apiKey;
+        private string accessToken;
+        private Timer accessTokenRenewer;
 
-        public Authentication(string tokenFetchUri, string subscriptionKey)
+        //Access token expires every 10 minutes. Renew it every 9 minutes only.
+        private const int RefreshTokenDuration = 9;
+
+        public Authentication(string apiKey)
         {
-            if (string.IsNullOrWhiteSpace(tokenFetchUri))
-            {
-                throw new ArgumentNullException(nameof(tokenFetchUri));
-            }
-            if (string.IsNullOrWhiteSpace(subscriptionKey))
-            {
-                throw new ArgumentNullException(nameof(subscriptionKey));
-            }
-            this.tokenFetchUri = tokenFetchUri;
-            this.subscriptionKey = subscriptionKey;
+            this.apiKey = apiKey;
+
+            var getAccessTokenTask = HttpPost(AccessUri, this.apiKey);
+            getAccessTokenTask.Wait();
+            this.accessToken = getAccessTokenTask.Result;
+
+            // renew the token every specfied minutes
+            accessTokenRenewer = new Timer(new TimerCallback(OnTokenExpiredCallback),
+                                           this,
+                                           TimeSpan.FromMinutes(RefreshTokenDuration),
+                                           TimeSpan.FromMilliseconds(-1));
         }
 
-        public async Task<string> FetchTokenAsync()
+        public string GetAccessToken()
         {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", this.subscriptionKey);
-                UriBuilder uriBuilder = new UriBuilder(this.tokenFetchUri);
+            return this.accessToken;
+        }
 
-                var result = await client.PostAsync(uriBuilder.Uri.AbsoluteUri, null).ConfigureAwait(false);
-                return await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+        private async Task RenewAccessToken()
+        {
+            string newAccessToken = await HttpPost(AccessUri, this.apiKey);
+            //swap the new token with old one
+            //Note: the swap is thread unsafe
+            this.accessToken = newAccessToken;
+        }
+
+        private async void OnTokenExpiredCallback(object stateInfo)
+        {
+            try
+            {
+                await RenewAccessToken();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(string.Format("Failed renewing access token. Details: {0}", ex.Message));
+            }
+            finally
+            {
+                try
+                {
+                    accessTokenRenewer.Change(TimeSpan.FromMinutes(RefreshTokenDuration), TimeSpan.FromMilliseconds(-1));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(string.Format("Failed to reschedule the timer to renew access token. Details: {0}", ex.Message));
+                }
+            }
+        }
+
+        private async Task<string> HttpPost(string accessUri, string apiKey)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, accessUri))
+                {
+                    request.Headers.Add("Ocp-Apim-Subscription-Key", apiKey);
+                    using (HttpResponseMessage response = await client.SendAsync(request))
+                    {
+                        using (response.Content)
+                        {
+                            return await response.Content.ReadAsStringAsync();
+                        }
+                    }
+                }
+
             }
         }
     }

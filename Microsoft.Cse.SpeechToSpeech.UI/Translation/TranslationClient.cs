@@ -36,37 +36,40 @@
                 queryString.Add(("to", to.Code));
                 queryString.Add(("textType", "plain"));
 
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, GenerateRequestUri(queryString));
-                request.Headers.Add("X-ClientTraceId", Guid.NewGuid().ToString());
-
-                JObject body = new JObject();
-                body["text"] = text;
-
-                string json = new JArray(body).ToString();
-                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
-                request.Content = content;
-
-                HttpResponseMessage response = await client.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, GenerateRequestUri(queryString)))
                 {
-                    using (response.Content)
+                    request.Headers.Add("X-ClientTraceId", Guid.NewGuid().ToString());
+
+                    JObject body = new JObject();
+                    body["text"] = text;
+
+                    string json = new JArray(body).ToString();
+                    StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                    request.Content = content;
+
+                    using (HttpResponseMessage response = await client.SendAsync(request))
                     {
-                        string responseJson = await response.Content.ReadAsStringAsync();
-                        result = JsonConvert.DeserializeObject<List<TranslationResult>>(responseJson);
-                    }
-                }
-                else
-                {
-                    using (response.Content)
-                    {
-                        string responseJson = await response.Content.ReadAsStringAsync();
-                        result = new List<TranslationResult>();
-                        result.Add(new TranslationResult()
+                        if (response.IsSuccessStatusCode)
                         {
-                            IsSuccess = false,
-                            Error = responseJson
-                        });
+                            using (response.Content)
+                            {
+                                string responseJson = await response.Content.ReadAsStringAsync();
+                                result = JsonConvert.DeserializeObject<List<TranslationResult>>(responseJson);
+                            }
+                        }
+                        else
+                        {
+                            using (response.Content)
+                            {
+                                string responseJson = await response.Content.ReadAsStringAsync();
+                                result = new List<TranslationResult>();
+                                result.Add(new TranslationResult()
+                                {
+                                    IsSuccess = false,
+                                    Error = responseJson
+                                });
+                            }
+                        }
                     }
                 }
             }

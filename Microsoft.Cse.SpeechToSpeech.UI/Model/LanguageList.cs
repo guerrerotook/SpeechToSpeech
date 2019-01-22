@@ -1,6 +1,5 @@
-﻿namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
+﻿namespace Microsoft.Cse.SpeechToSpeech.UI.Model
 {
-    using Microsoft.Cse.SpeechToSpeech.UI.Model;
     using System.Collections.Generic;
 
     public static class LanguageList
