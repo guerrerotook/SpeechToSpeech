@@ -96,17 +96,47 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
             new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)" },
             new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, HortenseRUS)" },
             new VoiceLanguage() { Locale = "fr-FR", Language="French (France)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
-            //new VoiceLanguage() { Locale = "arrrrr", Language="Arabic", Gender = "Female", VoiceName ="Microsof" },
+            new VoiceLanguage() { Locale = "he-IL", Language="Hebrew (Israel)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)" },
+            new VoiceLanguage() { Locale = "hi-IN", Language="Hindi (India)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (hi-IN, Kalpana, Apollo)" },
+            new VoiceLanguage() { Locale = "hi-IN", Language="Hindi (India)", Gender = "Female", VoiceName = "Microsoft Server Speech Text to Speech Voice (hi-IN, Kalpana)" },
+            new VoiceLanguage() { Locale = "hi-IN", Language="Hindi (India)", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (hi-IN, Hemant)" },
+            new VoiceLanguage() { Locale = "hr-HR", Language="Croatian", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (hr-HR, Matej)" },
+            new VoiceLanguage() { Locale = "hu-HU", Language="Hungarian", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (hu-HU, Szabolcs)" },
+            new VoiceLanguage() { Locale = "id-ID", Language="Indonesian", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (id-ID, Andika)" },
+            new VoiceLanguage() { Locale = "it-IT", Language="Italian", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (it-IT, Cosimo, Apollo)" },
+            new VoiceLanguage() { Locale = "it-IT", Language="Italian", Gender = "Female", VoiceName = "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)" },
+            new VoiceLanguage() { Locale = "ja-JP", Language="Japanese", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)"},
+            new VoiceLanguage() { Locale = "ja-JP", Language="Japanese", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (ja-JP, Ichiro, Apollo)"},
+            new VoiceLanguage() { Locale = "ja-JP", Language="Japanese", Gender = "Female", VoiceName = "Microsoft Server Speech Text to Speech Voice (ja-JP, HarukaRUS)"},
+            new VoiceLanguage() { Locale = "ko-KR", Language="Korean", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (ko-KR, HeamiRUS)"},
+            new VoiceLanguage() { Locale = "ms-MY", Language="Malay", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (ms-MY, Rizwan)" },
+            new VoiceLanguage() { Locale = "nb-NO", Language="Norwegian", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (nb-NO, HuldaRUS)"},
+            new VoiceLanguage() { Locale = "nl-NL", Language="Dutch", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (nl-NL, HannaRUS)" },
+            new VoiceLanguage() { Locale = "pl-PL", Language="Polish", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (pl-PL, PaulinaRUS)" },
+            new VoiceLanguage() { Locale = "pt-BR", Language="Portuguese (Brazil)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (pt-BR, HeloisaRUS)" },
+            new VoiceLanguage() { Locale = "pt-BR", Language="Portuguese (Brazil)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (pt-BR, HeloisaRUS)" },
+            new VoiceLanguage() { Locale = "pt-PT", Language="Portuguese (Portugal)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (pt-PT, HeliaRUS)" },
+            new VoiceLanguage() { Locale = "ro-RO", Language="Romanian", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (ro-RO, Andrei)" },
+            new VoiceLanguage() { Locale = "ru-RU", Language="Russian", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)" },
+            new VoiceLanguage() { Locale = "ru-RU", Language="Russian", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)" },
+            new VoiceLanguage() { Locale = "ru-RU", Language="Russian", Gender = "Female", VoiceName = "Microsoft Server Speech Text to Speech Voice (ru-RU, EkaterinaRUS)" },
+            new VoiceLanguage() { Locale = "sk-SK", Language="Slovak", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (sk-SK, Filip)" },
+            new VoiceLanguage() { Locale = "sl-SI", Language="Slovenian", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (sl-SI, Lado)" },
+            new VoiceLanguage() { Locale = "sv-SE", Language="Swedish", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)" },
+            new VoiceLanguage() { Locale = "ta-IN", Language="Tamil (India)", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)" },
+            new VoiceLanguage() { Locale = "te-IN", Language="Telugu (India)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (te-IN, Chitra)" },
+            new VoiceLanguage() { Locale = "th-TH", Language="Thai", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (th-TH, Pattara)" },
+            new VoiceLanguage() { Locale = "tr-TR", Language="Turkish", Gender = "Female", VoiceName = "Microsoft Server Speech Text to Speech Voice (tr-TR, SedaRUS)" },
+            new VoiceLanguage() { Locale = "vi-VN", Language="Vietnamese", Gender = "Male", VoiceName = "Microsoft Server Speech Text to Speech Voice (vi-VN, An)" },
+            new VoiceLanguage() { Locale = "zh-CN", Language="Chinese (Mainland)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)" },
+            new VoiceLanguage() { Locale = "zh-CN", Language="Chinese (Mainland)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-CN, Yaoyao, Apollo)"},
+            new VoiceLanguage() { Locale = "zh-CN", Language="Chinese (Mainland)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)" },
+            new VoiceLanguage() { Locale = "zh-HK", Language="Chinese (Hong Kong)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-HK, Tracy, Apollo)" },
+            new VoiceLanguage() { Locale = "zh-HK", Language="Chinese (Hong Kong)", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-HK, TracyRUS)" },
+            new VoiceLanguage() { Locale = "zh-HK", Language="Chinese (Hong Kong)", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-HK, Danny, Apollo)" },
+            new VoiceLanguage() { Locale = "zh-TW", Language="Arabic", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)" },
+            new VoiceLanguage() { Locale = "zh-TW", Language="Arabic", Gender = "Female", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-TW, HanHanRUS)" },
+            new VoiceLanguage() { Locale = "zh-TW", Language="Arabic", Gender = "Male", VoiceName ="Microsoft Server Speech Text to Speech Voice (zh-TW, Zhiwei, Apollo)" }
         };
 
         private string subscriptionKey;
@@ -143,14 +173,14 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
         public InputSourceType InputSource { get => inputSource; set => Set(nameof(InputSource), ref inputSource, value); }
         public string WavInputFilename { get => wavInputFilename; set => Set(nameof(WavInputFilename), ref wavInputFilename, value); }
 
-        public bool ShowSpeechApiConfigOnStartup { get;  }
+        public bool ShowSpeechApiConfigOnStartup { get; }
 
 
         public IEnumerable<Language> Languages { get => languages; }
         public IEnumerable<string> Regions { get => regions; }
         public IEnumerable<VoiceLanguage> Voices { get => voices; }
 
-        public bool IsRecognizerRunning => azureSpeech!=null;
+        public bool IsRecognizerRunning => azureSpeech != null;
 
         private void LoadKeys()
         {
@@ -290,7 +320,8 @@ namespace Microsoft.Cse.SpeechToSpeech.UI.ViewModel
                     azureSpeech = null;
                 }
                 SetOutputFilename(null); // clean up file
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 AppendDebug($"Exception: {ex.Message}");
             }
