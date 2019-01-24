@@ -10,14 +10,14 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
-
-
+       
     public class TextTranslationSpeechViewModel : ViewModelBase
     {
         private const string subscriptionKeyFileName = "TranslationSubscriptionKey.txt";
         private const string speechSubscriptionKeyFileName = "TranslationSpeechSubscriptionKey.txt";
-        private string requestUri = "https://westus.tts.speech.microsoft.com/cognitiveservices/v1";
+        private string requestUri = "https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1";
 
         private Language language;
         private Language translationLanguage;
@@ -80,15 +80,17 @@
 
 
             Authentication auth = new Authentication(SpeechSubscriptionKey);
+            await auth.RenewAuthenticationToken();
             try
             {
                 accessToken = auth.GetAccessToken();
+                AppendDebug($"Access Token {accessToken}");
             }
             catch (Exception ex)
             {
                 AppendDebug($"Error {ex.ToString()}");
             }
-
+           
             ExecuteTextToSpeech(TranslatedText, SelectedVoice);
         }
 
@@ -108,31 +110,24 @@
                 VoiceType = voice.Gender,
                 Locale = voice.Locale,
                 VoiceName = voice.VoiceName,
-                OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
+                OutputFormat = AudioOutputFormat.Raw8Khz8BitMonoMULaw,
                 AuthorizationToken = "Bearer " + accessToken,
             });
 
             cortana.Error += OnSynthesizeError;
             cortana.AudioAvailable += OnAudioAvailable;
+            cortana.Speak(CancellationToken.None);
         }
 
-        private void OnAudioAvailable(object sender, GenericEventArgs<Stream> e)
+        private void OnAudioAvailable(object sender, GenericEventArgs<byte[]> e)
         {
-            byte[] buffer = new byte[e.EventData.Length];
-            if (buffer.Length == 0)
-            {
-                return;
-            }
-
-            e.EventData.Write(buffer, 0, buffer.Length);
-
             string tempFilename = Path.GetTempFileName();
 
             string outputFileName = Path.ChangeExtension(tempFilename, ".wav");
             File.Delete(tempFilename); // clean up .tmp file
             using (FileStream fs = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
             {
-                fs.Write(buffer, 0, buffer.Length);
+                fs.Write(e.EventData, 0, e.EventData.Length);
             }
 
             AppendDebug($"Saved output wave file in {outputFileName}");
@@ -166,7 +161,7 @@
 
             if (!string.IsNullOrEmpty(SpeechSubscriptionKey))
             {
-                IsolatedStorageManager.SaveKeyToIsolatedStorage(speechSubscriptionKeyFileName, SubscriptionKey);
+                IsolatedStorageManager.SaveKeyToIsolatedStorage(speechSubscriptionKeyFileName, SpeechSubscriptionKey);
             }
         }
 

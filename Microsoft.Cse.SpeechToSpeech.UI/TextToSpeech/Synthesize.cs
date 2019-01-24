@@ -55,7 +55,7 @@
         /// <summary>
         /// Called when a TTS request has been completed and audio is available.
         /// </summary>
-        public event EventHandler<GenericEventArgs<Stream>> AudioAvailable;
+        public event EventHandler<GenericEventArgs<byte[]>> AudioAvailable;
 
         /// <summary>
         /// Called when an error has occured. e.g this could be an HTTP error.
@@ -105,12 +105,13 @@
                     {
                         if (responseMessage.IsCompleted && responseMessage.Result != null && responseMessage.Result.IsSuccessStatusCode)
                         {
-                            var httpStream = await responseMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            AudioAvailable?.Invoke(this, new GenericEventArgs<Stream>(httpStream));
+                            var httpStream = await responseMessage.Result.Content.ReadAsByteArrayAsync();
+                            AudioAvailable?.Invoke(this, new GenericEventArgs<byte[]>(httpStream));
                         }
                         else
                         {
-                            Error?.Invoke(this, new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", responseMessage.Result.StatusCode))));
+                            string errorContent = responseMessage.Result.ReasonPhrase;
+                            Error?.Invoke(this, new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", errorContent))));
                         }
                     }
                     catch (Exception e)
@@ -195,11 +196,11 @@
                     // authorization Header
                     toReturn.Add(new KeyValuePair<string, string>("Authorization", this.AuthorizationToken));
                     // Refer to the doc
-                    toReturn.Add(new KeyValuePair<string, string>("X-Search-AppId", "07D3234E49CE426DAA29772419F436CA"));
+                    toReturn.Add(new KeyValuePair<string, string>("X-Search-AppId", "nokiavoicepoc"));
                     // Refer to the doc
-                    toReturn.Add(new KeyValuePair<string, string>("X-Search-ClientID", "1ECFAE91408841A480F00935DC390960"));
+                    toReturn.Add(new KeyValuePair<string, string>("X-Search-ClientID", Guid.NewGuid().ToString().Replace("-", string.Empty)));
                     // The software originating the request
-                    toReturn.Add(new KeyValuePair<string, string>("User-Agent", "TTSClient"));
+                    toReturn.Add(new KeyValuePair<string, string>("User-Agent", "NokiaSpeechPoc"));
 
                     return toReturn;
                 }

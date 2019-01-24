@@ -15,7 +15,7 @@
     {
         // Issue token uri for new unified SpeechService API "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken". 
         // Note: new unified SpeechService API key and issue token uri is per region
-        public static readonly string AccessUri = "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken";
+        public static readonly string AccessUri = "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issuetoken";
         private string apiKey;
         private string accessToken;
         private Timer accessTokenRenewer;
@@ -27,10 +27,13 @@
         {
             this.apiKey = apiKey;
 
-            var getAccessTokenTask = HttpPost(AccessUri, this.apiKey);
-            getAccessTokenTask.Wait();
-            this.accessToken = getAccessTokenTask.Result;
+            
+        }
 
+        public async Task RenewAuthenticationToken()
+        {
+            this.accessToken = await HttpPost(AccessUri, this.apiKey);
+            
             // renew the token every specfied minutes
             accessTokenRenewer = new Timer(new TimerCallback(OnTokenExpiredCallback),
                                            this,
