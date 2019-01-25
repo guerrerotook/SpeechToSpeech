@@ -19,12 +19,16 @@
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ComboBoxItem item = (ComboBoxItem)value;
+            ComboBoxItem item = value as ComboBoxItem;
             if (item != null)
             {
                 return item.Content as string;
             }
-            else
+            else if(value is string)
+            {
+                return value;
+            }
+            else 
             {
                 return null;
             }
