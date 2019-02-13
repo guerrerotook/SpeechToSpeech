@@ -181,7 +181,7 @@
             }
             catch (Exception ex)
             {
-                AppendDebug($"Exception: {ex.Message}");
+                AppendDebug($"Exception: {ex.ToString()}");
             }
         }
         public async Task StopRecognizer()
