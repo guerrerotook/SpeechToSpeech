@@ -31,10 +31,10 @@
 
             if (from != null && to != null)
             {
-                List<(string, string)> queryString = new List<(string, string)>();
-                queryString.Add(("from", from.Code));
-                queryString.Add(("to", to.Code));
-                queryString.Add(("textType", "plain"));
+                List<Tuple<string, string>> queryString = new List<Tuple<string, string>>();
+                queryString.Add(Tuple.Create<string,string>("from", from.Code));
+                queryString.Add(Tuple.Create<string, string>("to", to.Code));
+                queryString.Add(Tuple.Create<string, string>("textType", "plain"));
 
                 using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, GenerateRequestUri(queryString)))
                 {
@@ -77,7 +77,7 @@
             return result;
         }
 
-        private string GenerateRequestUri(List<(string, string)> items)
+        private string GenerateRequestUri(List<Tuple<string, string>> items)
         {
             string result = null;
 
