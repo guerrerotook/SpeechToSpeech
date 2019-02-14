@@ -12,7 +12,7 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-       
+
     public class TextTranslationSpeechViewModel : ViewModelBase
     {
         private const string subscriptionKeyFileName = "TranslationSubscriptionKey.txt";
@@ -22,6 +22,8 @@
         private Language language;
         private Language translationLanguage;
         private VoiceLanguage selectedVoice;
+        private List<string> audioFormat;
+        private string selectedAudioOutputFormat;
         private string subscriptionKey;
         private string speechSubscriptionKey;
         private string text;
@@ -35,6 +37,9 @@
             DebugOutput = string.Empty;
             LoadKeys();
             PropertyChanged += OnTextTranslationSpeechViewModelPropertyChanged;
+            audioFormat = new List<string>();
+            audioFormat.AddRange(Enum.GetNames(typeof(AudioOutputFormat)));
+            SelectedAudioOutputFormat = Enum.GetName(typeof(AudioOutputFormat), AudioOutputFormat.Riff16Khz16BitMonoPcm);
         }
 
         public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
@@ -46,11 +51,13 @@
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
         public string SpeechSubscriptionKey { get => speechSubscriptionKey; set => Set(nameof(SpeechSubscriptionKey), ref speechSubscriptionKey, value); }
         public string CustomModelEndpointId { get; private set; }
+        public List<string> AudioFormat { get => audioFormat; set => Set(nameof(AudioFormat), ref audioFormat, value); }
+        public string SelectedAudioOutputFormat { get => selectedAudioOutputFormat; set => Set(nameof(SelectedAudioOutputFormat), ref selectedAudioOutputFormat, value); }
 
         public IEnumerable<Language> Languages { get => LanguageList.Languages; }
         public IEnumerable<string> Regions { get => RegionList.Regions; }
         public IEnumerable<VoiceLanguage> Voices { get => VoiceList.Voices; }
-
+        public string AudioOutputFolder { get; set; }
 
         public async Task Translate()
         {
@@ -90,7 +97,7 @@
             {
                 AppendDebug($"Error {ex.ToString()}");
             }
-           
+
             ExecuteTextToSpeech(TranslatedText, SelectedVoice);
         }
 
@@ -110,7 +117,7 @@
                 VoiceType = voice.Gender,
                 Locale = voice.Locale,
                 VoiceName = voice.VoiceName,
-                OutputFormat = AudioOutputFormat.Raw8Khz8BitMonoMULaw,
+                OutputFormat = (AudioOutputFormat)Enum.Parse(typeof(AudioOutputFormat), SelectedAudioOutputFormat, false),
                 AuthorizationToken = "Bearer " + accessToken,
             });
 
@@ -122,6 +129,11 @@
         private void OnAudioAvailable(object sender, GenericEventArgs<byte[]> e)
         {
             string tempFilename = Path.GetTempFileName();
+
+            if (!string.IsNullOrEmpty(AudioOutputFolder) && Directory.Exists(AudioOutputFolder))
+            {
+                tempFilename = Path.Combine(AudioOutputFolder, Path.GetFileName(tempFilename));
+            }
 
             string outputFileName = Path.ChangeExtension(tempFilename, ".wav");
             File.Delete(tempFilename); // clean up .tmp file

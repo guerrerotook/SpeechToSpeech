@@ -111,7 +111,9 @@
                         else
                         {
                             string errorContent = responseMessage.Result.ReasonPhrase;
+                            var stringContent = await responseMessage.Result.Content.ReadAsStringAsync();
                             Error?.Invoke(this, new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", errorContent))));
+                            Error?.Invoke(this, new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", stringContent))));
                         }
                     }
                     catch (Exception e)

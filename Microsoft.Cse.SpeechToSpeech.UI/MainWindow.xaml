@@ -252,6 +252,19 @@
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
                                             </ComboBox>
+                                            <TextBlock TextWrapping="Wrap" Text="Audio Format" Margin="10,0,0,0"/>
+                                            <ComboBox Margin="10" ItemsSource="{Binding AudioFormat}" SelectedItem="{Binding SelectedAudioOutputFormat, Mode=TwoWay}"  >
+
+                                            </ComboBox>
+                                            <TextBlock TextWrapping="Wrap" Margin="10,0,0,0"><Run Text="Output folder for audio files"/></TextBlock>
+                                            <Grid Margin="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox x:Name="audioOutputPath" IsEnabled="False" TextWrapping="Wrap" Margin="0,0,5,0" AutomationProperties.HelpText="c:\myfolder"/>
+                                                <Button x:Name="audioOutput" Content="..." d:LayoutOverrides="Width, Height" Grid.Column="1" Click="OnAudioOutputClick"/>
+                                            </Grid>
                                         </StackPanel>
                                     </Expander>
                                 </StackPanel>
