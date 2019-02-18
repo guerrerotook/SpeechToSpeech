@@ -52,7 +52,7 @@
         public string WavInputFilename { get => wavInputFilename; set => Set(nameof(WavInputFilename), ref wavInputFilename, value); }
 
         public bool ShowSpeechApiConfigOnStartup { get; }
-
+        public string AudioOutputFolder { get; set; }
 
         public IEnumerable<Language> Languages { get => LanguageList.Languages; }
         public IEnumerable<string> Regions { get => RegionList.Regions; }
@@ -101,6 +101,11 @@
             }
 
             string tempFilename = Path.GetTempFileName();
+
+            if (!string.IsNullOrEmpty(AudioOutputFolder) && Directory.Exists(AudioOutputFolder))
+            {
+                tempFilename = Path.Combine(AudioOutputFolder, Path.GetFileName(tempFilename));
+            }
 
             string outputFileName = Path.ChangeExtension(tempFilename, ".wav");
             File.Delete(tempFilename); // clean up .tmp file

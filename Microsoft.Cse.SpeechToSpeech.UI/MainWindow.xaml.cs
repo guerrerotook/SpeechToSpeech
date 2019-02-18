@@ -109,5 +109,17 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
                 audioOutputPath.Text = dialog.SelectedPath;
             }
         }
+
+        private void OnAudioOutputTranslationClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.Description = "Choose the audio file folder";
+            dialog.ShowNewFolderButton = true;
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                this.speechViewModel.AudioOutputFolder = dialog.SelectedPath;
+                audioOutputPathAudio.Text = dialog.SelectedPath;
+            }
+        }
     }
 }
