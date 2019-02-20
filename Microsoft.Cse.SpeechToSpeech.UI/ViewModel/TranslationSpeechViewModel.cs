@@ -13,12 +13,8 @@
 
     public class TranslationSpeechViewModel : ViewModelBase
     {
-        private const string endpointIdFileName = "CustomModelEndpointId.txt";
-        private const string subscriptionKeyFileName = "SubscriptionKey.txt";
 
         private AzureSpeechManager azureSpeech;
-        private string subscriptionKey;
-        private string customModelEndpointId;
         private Language language;
         private Language translationLanguage;
         private VoiceLanguage selectedVoice;
@@ -28,19 +24,18 @@
         private string lastOutputFilename;
         private InputSourceType inputSource = InputSourceType.Microphone;
         private string wavInputFilename;
+        private AppSettings settings;
 
         public TranslationSpeechViewModel()
         {
             PartialOutput = string.Empty;
             DebugOutput = string.Empty;
-            LoadKeys();
-            PropertyChanged += OnSpeechModelPropertyChanged;
 
-            ShowSpeechApiConfigOnStartup = string.IsNullOrEmpty(SubscriptionKey);
+            settings = IsolatedStorageSettings.Settings;
+            ShowSpeechApiConfigOnStartup = string.IsNullOrEmpty(settings.SpeechSubscriptionKey);
         }
 
-        public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
-        public string CustomModelEndpointId { get => customModelEndpointId; set => Set(nameof(CustomModelEndpointId), ref customModelEndpointId, value); }
+        public AppSettings Settings { get => settings; }
         public Language Language { get => language; set => Set(nameof(Language), ref language, value); }
         public string PartialOutput { get => partialOutput; set => Set(nameof(PartialOutput), ref partialOutput, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
@@ -60,36 +55,10 @@
 
         public bool IsRecognizerRunning => azureSpeech != null;
 
-        private void LoadKeys()
-        {
-            CustomModelEndpointId = IsolatedStorageManager.GetValueFromIsolatedStorage(endpointIdFileName);
-            SubscriptionKey = IsolatedStorageManager.GetValueFromIsolatedStorage(subscriptionKeyFileName);
-        }
-
-        private void OnSpeechModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SubscriptionKey" || e.PropertyName == "CustomModelEndpointId")
-            {
-                SaveAzureSpeechKey();
-            }
-        }
 
         private void AppendDebug(string message)
         {
             DebugOutput = string.Concat(DebugOutput, Environment.NewLine, message);
-        }
-
-        private void SaveAzureSpeechKey()
-        {
-            if (!string.IsNullOrEmpty(SubscriptionKey))
-            {
-                IsolatedStorageManager.SaveKeyToIsolatedStorage(subscriptionKeyFileName, SubscriptionKey);
-            }
-
-            if (!string.IsNullOrEmpty(CustomModelEndpointId))
-            {
-                IsolatedStorageManager.SaveKeyToIsolatedStorage(endpointIdFileName, CustomModelEndpointId);
-            }
         }
 
         private void OnAzureSpeechTranslationSynthesizing(object sender, TranslationSynthesisEventArgs e)
@@ -147,12 +116,12 @@
             {
                 if (azureSpeech == null)
                 {
-                    if (string.IsNullOrEmpty(CustomModelEndpointId))
+                    if (string.IsNullOrEmpty(Settings.CustomModelEndpointId))
                     {
                         AppendDebug("CustomModelEndpointId must be specified");
                         return;
                     }
-                    if (string.IsNullOrEmpty(SubscriptionKey))
+                    if (string.IsNullOrEmpty(Settings.SpeechSubscriptionKey))
                     {
                         AppendDebug("SubscriptionKey must be specified");
                         return;
@@ -161,7 +130,7 @@
                     azureSpeech.Recognizing += OnAzureSpeechRecognizing;
                     azureSpeech.Notification += OnAzureSpeechNotification;
                     azureSpeech.TranslationSynthesizing += OnAzureSpeechTranslationSynthesizing;
-                    azureSpeech.Initialize(SubscriptionKey, CustomModelEndpointId, inputSource, wavInputFilename);
+                    azureSpeech.Initialize(Settings.SpeechSubscriptionKey, Settings.CustomModelEndpointId, inputSource, wavInputFilename);
 
                 }
                 if (Language == null)

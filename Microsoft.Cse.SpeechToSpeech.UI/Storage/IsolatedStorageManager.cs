@@ -1,54 +1,66 @@
 ﻿namespace Microsoft.Cse.SpeechToSpeech.UI.Storage
 {
+    using Newtonsoft.Json;
+    using System;
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Text;
+    using System.Threading;
 
-    public class IsolatedStorageManager
+    public static class IsolatedStorageSettings
     {
-        public static void SaveKeyToIsolatedStorage(string fileName, string key)
+        private const string SettingsFileName = "settings.json";
+        private const IsolatedStorageScope Scope = IsolatedStorageScope.User | IsolatedStorageScope.Assembly;
+
+        private static Lazy<AppSettings> settingsLazy = new Lazy<AppSettings>(LoadSettings, LazyThreadSafetyMode.PublicationOnly);
+        public static AppSettings Settings
         {
-            if (fileName != null && key != null)
+            get => settingsLazy.Value;
+        }
+        public static void Save()
+        {
+            if (settingsLazy.IsValueCreated)
             {
-                using (IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(
-                    IsolatedStorageScope.User |
-                    IsolatedStorageScope.Assembly,
-                    null,
-                    null))
-                {
-                    using (var stream = new IsolatedStorageFileStream(fileName, FileMode.Create, isolatedStorage))
-                    {
-                        using (var writer = new StreamWriter(stream, Encoding.UTF8))
-                        {
-                            writer.WriteLine(key);
-                        }
-                    }
-                }
+                SaveSettings(settingsLazy.Value);
             }
         }
 
-        public static string GetValueFromIsolatedStorage(string fileName)
+        private static AppSettings LoadSettings()
         {
-            string result = null;
-            using (IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(
-                IsolatedStorageScope.User |
-                IsolatedStorageScope.Assembly,
-                null,
-                null))
+            AppSettings settings = null;
+            using (IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetStore(Scope, null, null))
             {
-                if (isolatedStorage.FileExists(fileName))
+                if (isolatedStorage.FileExists(SettingsFileName))
                 {
-                    using (var stream = new IsolatedStorageFileStream(fileName, FileMode.Open, isolatedStorage))
+                    var serializer = JsonSerializer.CreateDefault();
+                    using (var stream = new IsolatedStorageFileStream(SettingsFileName, FileMode.Open, isolatedStorage))
+                    using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    using (var jsonReader = new JsonTextReader(reader))
                     {
-                        using (var reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            result = reader.ReadLine();
-                        }
+                        settings = serializer.Deserialize<AppSettings>(jsonReader);
                     }
                 }
             }
+            if (settings == null)
+            {
+                settings = new AppSettings();
+            }
+            // wire up auto-saving settings :-)
+            settings.PropertyChanged += (sender, e) => SaveSettings(settings);
 
-            return result;
+            return settings;
+        }
+
+
+        private static void SaveSettings(AppSettings settings)
+        {
+            var serializer = JsonSerializer.CreateDefault();
+            using (var isolatedStorage = IsolatedStorageFile.GetStore(Scope, null, null))
+            using (var stream = new IsolatedStorageFileStream(SettingsFileName, FileMode.Create, isolatedStorage))
+            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+                serializer.Serialize(writer, settings);
+            }
         }
     }
 }

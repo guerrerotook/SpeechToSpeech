@@ -15,8 +15,6 @@
 
     public class TextTranslationSpeechViewModel : ViewModelBase
     {
-        private const string subscriptionKeyFileName = "TranslationSubscriptionKey.txt";
-        private const string speechSubscriptionKeyFileName = "TranslationSpeechSubscriptionKey.txt";
         private string requestUri = "https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1";
 
         private Language language;
@@ -24,32 +22,31 @@
         private VoiceLanguage selectedVoice;
         private List<string> audioFormat;
         private string selectedAudioOutputFormat;
-        private string subscriptionKey;
-        private string speechSubscriptionKey;
         private string text;
         private string translatedText;
         private string debugOutput;
         private string accessToken = null;
         private Synthesize cortana;
+        private AppSettings settings;
 
         public TextTranslationSpeechViewModel()
         {
             DebugOutput = string.Empty;
-            LoadKeys();
-            PropertyChanged += OnTextTranslationSpeechViewModelPropertyChanged;
+            settings = IsolatedStorageSettings.Settings;
             audioFormat = new List<string>();
             audioFormat.AddRange(Enum.GetNames(typeof(AudioOutputFormat)));
             SelectedAudioOutputFormat = Enum.GetName(typeof(AudioOutputFormat), AudioOutputFormat.Riff16Khz16BitMonoPcm);
+            ShowTranslationApiConfigOnStartup = string.IsNullOrEmpty(settings.SpeechSubscriptionKey)
+                                                || string.IsNullOrEmpty(settings.TextTranslationSubscriptionKey);
         }
 
-        public string SubscriptionKey { get => subscriptionKey; set => Set(nameof(SubscriptionKey), ref subscriptionKey, value); }
+        public AppSettings Settings { get => settings; }
         public Language Language { get => language; set => Set(nameof(Language), ref language, value); }
         public Language TranslationLanguage { get => translationLanguage; set => Set(nameof(TranslationLanguage), ref translationLanguage, value); }
         public VoiceLanguage SelectedVoice { get => selectedVoice; set => Set(nameof(SelectedVoice), ref selectedVoice, value); }
         public string Text { get => text; set => Set(nameof(Text), ref text, value); }
         public string TranslatedText { get => translatedText; set => Set(nameof(TranslatedText), ref translatedText, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
-        public string SpeechSubscriptionKey { get => speechSubscriptionKey; set => Set(nameof(SpeechSubscriptionKey), ref speechSubscriptionKey, value); }
         public string CustomModelEndpointId { get; private set; }
         public List<string> AudioFormat { get => audioFormat; set => Set(nameof(AudioFormat), ref audioFormat, value); }
         public string SelectedAudioOutputFormat { get => selectedAudioOutputFormat; set => Set(nameof(SelectedAudioOutputFormat), ref selectedAudioOutputFormat, value); }
@@ -57,11 +54,12 @@
         public IEnumerable<Language> Languages { get => LanguageList.Languages; }
         public IEnumerable<string> Regions { get => RegionList.Regions; }
         public IEnumerable<VoiceLanguage> Voices { get => VoiceList.Voices; }
+        public bool ShowTranslationApiConfigOnStartup { get; }
         public string AudioOutputFolder { get; set; }
 
         public async Task Translate()
         {
-            TranslationClient client = new TranslationClient(subscriptionKey);
+            TranslationClient client = new TranslationClient(Settings.TextTranslationSubscriptionKey);
 
             List<TranslationResult> result = await client.Translate(language, translationLanguage, Text);
             if (result != null && result.Count > 0)
@@ -86,7 +84,7 @@
 
 
 
-            Authentication auth = new Authentication(SpeechSubscriptionKey);
+            Authentication auth = new Authentication(Settings.SpeechSubscriptionKey);
             await auth.RenewAuthenticationToken();
             try
             {
@@ -148,33 +146,6 @@
         private void OnSynthesizeError(object sender, GenericEventArgs<Exception> e)
         {
             AppendDebug(e.EventData.ToString());
-        }
-
-        private void OnTextTranslationSpeechViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SubscriptionKey" || e.PropertyName == "SpeechSubscriptionKey")
-            {
-                SaveAzureSpeechKey();
-            }
-        }
-
-        private void LoadKeys()
-        {
-            SubscriptionKey = IsolatedStorageManager.GetValueFromIsolatedStorage(subscriptionKeyFileName);
-            SpeechSubscriptionKey = IsolatedStorageManager.GetValueFromIsolatedStorage(speechSubscriptionKeyFileName);
-        }
-
-        private void SaveAzureSpeechKey()
-        {
-            if (!string.IsNullOrEmpty(SubscriptionKey))
-            {
-                IsolatedStorageManager.SaveKeyToIsolatedStorage(subscriptionKeyFileName, SubscriptionKey);
-            }
-
-            if (!string.IsNullOrEmpty(SpeechSubscriptionKey))
-            {
-                IsolatedStorageManager.SaveKeyToIsolatedStorage(speechSubscriptionKeyFileName, SpeechSubscriptionKey);
-            }
         }
 
         private void AppendDebug(string message)
