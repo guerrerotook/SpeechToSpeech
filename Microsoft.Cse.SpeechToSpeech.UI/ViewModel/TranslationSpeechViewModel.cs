@@ -182,7 +182,15 @@
 
                 azureSpeech.SetSpeechLanguage(Language.Code, TranslationLanguage.Code, SelectedVoice.VoiceName);
                 await azureSpeech.CreateTranslationRecognizer();
-                await azureSpeech.StartContinuousRecognitionAsync();
+                if (string.IsNullOrEmpty(WavInputFilename))
+                {
+                    await azureSpeech.StartContinuousRecognitionAsync();
+                }
+                else
+                {
+                    await azureSpeech.RecognizeOnceAsync();
+                }
+                
             }
             catch (Exception ex)
             {

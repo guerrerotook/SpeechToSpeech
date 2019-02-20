@@ -92,7 +92,7 @@
                                             <RadioButton x:Name="fileInputRadioButton" IsChecked="{Binding InputSource, ConverterParameter={x:Static model:InputSourceType.WavFile}, Converter={StaticResource enumValueMatchesConverter}}" Margin="10, 10, 0, 0" Click="OnInputButtonClick" Content="Use wav file"/>
                                             <StackPanel Orientation="Vertical" Grid.Row="1"  Margin="10" IsEnabled="{Binding InputSource, ConverterParameter={x:Static model:InputSourceType.WavFile}, Converter={StaticResource enumValueMatchesConverter}}">
                                                 <Button  x:Name="selectFileButton" Content="Select File" Margin="0,5,0,5" Click="OnSelectFileButtonClick" Height="35" VerticalAlignment="Top"/>
-                                                <TextBox x:Name="fileNameTextBox"  Padding="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding Wav}"
+                                                <TextBox x:Name="fileNameTextBox"  Padding="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding WavInputFilename}"
                                                 ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"  />
 
                                             </StackPanel>

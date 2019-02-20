@@ -101,6 +101,11 @@
             return recognizer.StartContinuousRecognitionAsync();
         }
 
+        public Task RecognizeOnceAsync()
+        {
+            return recognizer.RecognizeOnceAsync();
+        }
+
         public Task StopContinuousRecognitionAsync()
         {
             return recognizer.StopContinuousRecognitionAsync();
