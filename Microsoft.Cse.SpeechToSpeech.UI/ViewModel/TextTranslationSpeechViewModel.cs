@@ -64,11 +64,11 @@
             if (result != null && result.Count > 0)
             {
                 AppendDebug("Translated text is: ");
-                foreach (var tranlationResult in result)
+                foreach (var translationResult in result)
                 {
-                    if (tranlationResult.IsSuccess)
+                    if (translationResult.IsSuccess)
                     {
-                        foreach (var item in tranlationResult.Translations)
+                        foreach (var item in translationResult.Translations)
                         {
                             AppendDebug($"Language: {item.LanguageCode} -> {item.Text}");
                             TranslatedText = item.Text;
@@ -76,26 +76,29 @@
                     }
                     else
                     {
-                        AppendDebug($"Error {tranlationResult.Error}");
+                        AppendDebug($"Error {translationResult.Error}");
+                        TranslatedText = null;
                     }
                 }
             }
 
 
-
-            Authentication auth = new Authentication(Settings.SpeechSubscriptionKey);
-            await auth.RenewAuthenticationToken();
-            try
+            if (TranslatedText != null)
             {
-                accessToken = auth.GetAccessToken();
-                AppendDebug($"Access Token {accessToken}");
-            }
-            catch (Exception ex)
-            {
-                AppendDebug($"Error {ex.ToString()}");
-            }
+                Authentication auth = new Authentication(Settings.SpeechSubscriptionKey);
+                await auth.RenewAuthenticationToken();
+                try
+                {
+                    accessToken = auth.GetAccessToken();
+                    AppendDebug($"Access Token {accessToken}");
+                }
+                catch (Exception ex)
+                {
+                    AppendDebug($"Error {ex.ToString()}");
+                }
 
-            ExecuteTextToSpeech(TranslatedText, SelectedVoice);
+                ExecuteTextToSpeech(TranslatedText, SelectedVoice);
+            }
         }
 
         private void ExecuteTextToSpeech(string text, VoiceLanguage voice)
