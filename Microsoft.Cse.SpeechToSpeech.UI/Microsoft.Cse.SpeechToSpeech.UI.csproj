@@ -121,6 +121,7 @@
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\SpeechModel.cs" />
     <Compile Include="Model\VoiceLanguage.cs" />
+    <Compile Include="AppSettings.cs" />
     <Compile Include="Speech\AzureSpeechManager.cs" />
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />
