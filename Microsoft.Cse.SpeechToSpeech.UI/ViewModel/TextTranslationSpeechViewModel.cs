@@ -47,7 +47,6 @@
         public string Text { get => text; set => Set(nameof(Text), ref text, value); }
         public string TranslatedText { get => translatedText; set => Set(nameof(TranslatedText), ref translatedText, value); }
         public string DebugOutput { get => debugOutput; set => Set(nameof(DebugOutput), ref debugOutput, value); }
-        public string CustomModelEndpointId { get; private set; }
         public List<string> AudioFormat { get => audioFormat; set => Set(nameof(AudioFormat), ref audioFormat, value); }
         public string SelectedAudioOutputFormat { get => selectedAudioOutputFormat; set => Set(nameof(SelectedAudioOutputFormat), ref selectedAudioOutputFormat, value); }
 
