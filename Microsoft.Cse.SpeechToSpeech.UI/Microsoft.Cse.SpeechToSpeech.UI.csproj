@@ -73,6 +73,9 @@
     <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=1.3.1.28, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.3.1\lib\net461\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.5\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -116,6 +119,8 @@
     <Compile Include="Model\SpeechModel.cs" />
     <Compile Include="Model\VoiceLanguage.cs" />
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Model\WavValidation\WavError.cs" />
+    <Compile Include="Model\WavValidation\WavFormatErrorType.cs" />
     <Compile Include="Speech\AzureSpeechManager.cs" />
     <Compile Include="Speech\NotificationEventArgs.cs" />
     <Compile Include="Storage\IsolatedStorageManager.cs" />

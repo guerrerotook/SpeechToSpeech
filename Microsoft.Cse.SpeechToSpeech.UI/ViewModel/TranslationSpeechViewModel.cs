@@ -3,11 +3,12 @@
     using GalaSoft.MvvmLight;
     using Microsoft.CognitiveServices.Speech.Translation;
     using Microsoft.Cse.SpeechToSpeech.UI.Model;
+    using Microsoft.Cse.SpeechToSpeech.UI.Model.WavValidation;
     using Microsoft.Cse.SpeechToSpeech.UI.Speech;
     using Microsoft.Cse.SpeechToSpeech.UI.Storage;
+    using NAudio.Wave;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -110,6 +111,28 @@
             PartialOutput = string.Concat(PartialOutput, e.ToString(), Environment.NewLine);
         }
 
+        public List<WavError> CheckWavFileFormat(string filePath)
+        {
+            List<WavError> errors = new List<WavError>();
+
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            {
+                using (WaveFileReader reader = new WaveFileReader(filePath))
+                {
+                    if (reader.WaveFormat.BitsPerSample != 16)
+                    {
+                        errors.Add(new WavError(WavFormatErrorType.BitsPerSample, $"The expected BitsPerSample was 16 but found {reader.WaveFormat.BitsPerSample}"));
+                    }
+                    if(reader.WaveFormat.SampleRate != 16000)
+                    {
+                        errors.Add(new WavError(WavFormatErrorType.SampleRate, $"The expected Sample Rate was 16000 but found {reader.WaveFormat.SampleRate}"));
+                    }
+                }
+            }
+
+            return errors;
+        }
+
         public async Task StartRecognizer()
         {
             try
@@ -159,7 +182,7 @@
                 {
                     await azureSpeech.RecognizeOnceAsync();
                 }
-                
+
             }
             catch (Exception ex)
             {

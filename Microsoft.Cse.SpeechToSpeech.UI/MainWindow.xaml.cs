@@ -1,20 +1,10 @@
-﻿using Microsoft.Cse.SpeechToSpeech.UI.Speech;
-using Microsoft.Cse.SpeechToSpeech.UI.Storage;
+﻿using Microsoft.Cse.SpeechToSpeech.UI.Model.WavValidation;
 using Microsoft.Cse.SpeechToSpeech.UI.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Microsoft.Cse.SpeechToSpeech.UI
 {
@@ -63,7 +53,25 @@ namespace Microsoft.Cse.SpeechToSpeech.UI
             {
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    speechViewModel.WavInputFilename = fileDialog.FileName;
+                    List<WavError> errors = speechViewModel.CheckWavFileFormat(fileDialog.FileName);
+
+                    if (errors.Count > 0)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        foreach (var error in errors)
+                        {
+                            sb.AppendFormat("ErrorType: {0} Message: {1}", error.Format, error.Message);
+                            sb.Append(Environment.NewLine);
+                        }
+
+                        sb.Append("Currently, only WAV / PCM with 16-bit samples, 16 kHz sample rate, and a single channel (Mono) is supported.");
+
+                        MessageBox.Show(sb.ToString(), "Errors found(s) in the wav file", MessageBoxButton.OK);
+                    }
+                    else
+                    {
+                        speechViewModel.WavInputFilename = fileDialog.FileName;
+                    }
                 }
             }
         }
