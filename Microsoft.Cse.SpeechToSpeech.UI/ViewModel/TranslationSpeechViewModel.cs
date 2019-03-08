@@ -123,7 +123,7 @@
                     {
                         errors.Add(new WavError(WavFormatErrorType.BitsPerSample, $"The expected BitsPerSample was 16 but found {reader.WaveFormat.BitsPerSample}"));
                     }
-                    if(reader.WaveFormat.SampleRate <= 16000)
+                    if(reader.WaveFormat.SampleRate < 16000)
                     {
                         errors.Add(new WavError(WavFormatErrorType.SampleRate, $"The expected Sample Rate was 16000 but found {reader.WaveFormat.SampleRate}"));
                     }
